@@ -26,6 +26,21 @@ public:
   void onReset () { cnt_onReset++; };
 };
 
+class TapDanceTestDoubleKey : public TapDanceDoubleKey {
+public:
+  TapDanceTestDoubleKey (uint8_t code, uint8_t kc1, uint8_t kc2) : TapDanceDoubleKey (code, kc1, kc2) {
+    cnt_onFinish = 0;
+    cnt_onReset = 0;
+  }
+
+  uint8_t cnt_onFinish, cnt_onReset;
+
+  uint8_t get_count (void) { return this->count; };
+
+  void onFinish () { cnt_onFinish++; };
+  void onReset () { cnt_onReset++; };
+};
+
 // ---- Tapping only on the tap-dance key ----
 void
 test_tapping_on_a_single_key (void) {
@@ -260,6 +275,27 @@ test_hold_with_interrupt (void) {
   assert (t.is_interrupted () == false);
 }
 
+void
+test_tap_dance_double_one_tap () {
+  TapDanceTestDoubleKey t = TapDanceTestDoubleKey (42, 2, 27);
+
+  // tap-and-release, followed by a timeout
+  t.press (42);
+  t.release (42);
+  assert (t.get_count () == 1);
+
+  for (int c = 0; c < 40; c++) {
+    t.cycle ();
+  }
+
+  // finished and reset
+  assert (t.cnt_onFinish == 1);
+  assert (t.cnt_onReset == 1);
+
+  // at this point, everything should be reset to default, save our test counters
+  assert (t.get_count () == 0);
+}
+
 int
 main (void) {
 
@@ -269,6 +305,8 @@ main (void) {
   test_one_tap_with_interrupt_after ();
   test_one_tap_with_interrupt_during_release ();
   test_hold_with_interrupt ();
+
+  test_tap_dance_double_one_tap ();
 
   return 0;
 }

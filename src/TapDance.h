@@ -26,12 +26,12 @@ class TapDanceKey {
   void cycle (void);
 };
 
-class TapDanceDoubleKey {
+class TapDanceDoubleKey : public TapDanceKey {
  private:
   uint8_t kc1, kc2;
 
  public:
-  TapDanceDoubleKey (uint8_t kc1, uint8_t kc2);
+  TapDanceDoubleKey (uint8_t code, uint8_t kc1, uint8_t kc2) : TapDanceKey (code) {};
 };
 
 #endif
