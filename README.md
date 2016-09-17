@@ -44,7 +44,30 @@ key, it will register `a`, and let the OS trigger the auto-repeat.
 How to use it?
 --------------
 
-*TODO*
+The way this works, is that the tap-dance keys `press` and `release` methods
+have to be called for each and every keypress (so the library can notice any
+interrupts), and on every scan cycle, the `cycle` method too (to simulate
+timeouts). When using the library with a firmware, these must be called at the
+appropriate places.
+
+Additionally, to have actual functionality on the key, not just bookkeeping, at
+least one of the callbacks (`onFinish`, `onReset`, and `onEachTap`) needs to be
+implemented in the derived class.
+
+* `onEachTap` runs every time the tap-dance key is pressed, on key-down. The
+  number of taps at this time is available in the `count` property, and
+  `pressed` will be `true` as well.
+* `onFinish` gets called whenever we finish processing the dance, and the
+  `count` property will not be incremented any further. This happens either on
+  timeout, or when another key interrupts the sequence. The `count` and
+  `pressed` properties can be used to determine the state. There is also the
+  `timedout` property, for rare cases.
+* `onReset` is called when the tap-dance key is fully finished, and should be
+  considered released too.
+  
+Have a look at the `TapDanceDoubleKey` class for a simple, straightforward way
+to add functionality to a tap-dance key, and the test suite for examples on
+usage.
 
 License
 -------
