@@ -30,8 +30,18 @@ class TapDanceDoubleKey : public TapDanceKey {
  private:
   uint8_t kc1, kc2;
 
+ protected:
+  virtual void register_code (uint8_t code) = 0;
+  virtual void unregister_code (uint8_t code) = 0;
+
+  virtual void onFinish (void);
+  virtual void onReset (void);
+
  public:
-  TapDanceDoubleKey (uint8_t code, uint8_t kc1, uint8_t kc2) : TapDanceKey (code) {};
+  TapDanceDoubleKey (uint8_t code, uint8_t kc1, uint8_t kc2) : TapDanceKey (code) {
+    this->kc1 = kc1;
+    this->kc2 = kc2;
+  };
 };
 
 #endif

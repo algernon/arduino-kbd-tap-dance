@@ -27,18 +27,24 @@ public:
 };
 
 class TapDanceTestDoubleKey : public TapDanceDoubleKey {
+protected:
+  virtual void register_code (uint8_t kc) { last_reg_kc = kc; };
+  virtual void unregister_code (uint8_t kc) { last_unreg_kc = kc; };
+
 public:
   TapDanceTestDoubleKey (uint8_t code, uint8_t kc1, uint8_t kc2) : TapDanceDoubleKey (code, kc1, kc2) {
     cnt_onFinish = 0;
     cnt_onReset = 0;
   }
 
-  uint8_t cnt_onFinish, cnt_onReset;
+  uint8_t cnt_onFinish, cnt_onReset, last_reg_kc, last_unreg_kc;
 
   uint8_t get_count (void) { return this->count; };
+  uint8_t get_last_reg (void) { return this->last_reg_kc; };
+  uint8_t get_last_unreg (void) { return this->last_unreg_kc; };
 
-  void onFinish () { cnt_onFinish++; };
-  void onReset () { cnt_onReset++; };
+  void onFinish () { cnt_onFinish++; TapDanceDoubleKey::onFinish (); };
+  void onReset () { cnt_onReset++; TapDanceDoubleKey::onReset (); };
 };
 
 // ---- Tapping only on the tap-dance key ----
@@ -294,6 +300,10 @@ test_tap_dance_double_one_tap () {
 
   // at this point, everything should be reset to default, save our test counters
   assert (t.get_count () == 0);
+
+  // the registered keycode shall be the first one
+  assert (t.get_last_reg () == 2);
+  assert (t.get_last_unreg () == 2);
 }
 
 int

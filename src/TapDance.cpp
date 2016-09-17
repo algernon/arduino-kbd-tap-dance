@@ -57,3 +57,22 @@ TapDanceKey::cycle (void) {
     }
   }
 }
+
+// --- Double ---
+void
+TapDanceDoubleKey::onFinish () {
+  uint8_t kc = this->kc1;
+  if (this->count >= 2)
+    kc = this->kc2;
+
+  this->register_code (kc);
+}
+
+void
+TapDanceDoubleKey::onReset () {
+  uint8_t kc = this->kc1;
+  if (this->count >= 2)
+    kc = this->kc2;
+
+  this->unregister_code (kc);
+}
