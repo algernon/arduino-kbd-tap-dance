@@ -1,8 +1,6 @@
 #include "TapDance.h"
 #include "assert.h"
 
-#include <iostream>
-
 class TapDanceTestKey : public TapDanceKey {
 public:
   TapDanceTestKey (uint8_t keycode) : TapDanceKey (keycode) {
