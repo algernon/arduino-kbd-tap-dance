@@ -24,6 +24,9 @@ TapDanceKey::press (uint8_t code) {
     return;
   }
 
+  if (this->count == 0)
+    return;
+
   this->interrupted = true;
   this->onFinish ();
 
@@ -36,6 +39,9 @@ TapDanceKey::press (uint8_t code) {
 
 void
 TapDanceKey::release (uint8_t code) {
+  if (code != this->keycode)
+    return;
+
   this->pressed = false;
   if (this->timedout || this->interrupted) {
     this->onReset ();

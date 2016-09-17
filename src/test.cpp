@@ -333,6 +333,44 @@ test_tap_dance_double_double_tap () {
   assert (t.get_last_unreg () == 27);
 }
 
+void
+test_one_tap_with_concurrent_release () {
+  TapDanceTestKey t = TapDanceTestKey (42);
+
+  // we first press another key
+  t.press (2);
+
+  // we then press the tap-dance key
+  t.press (42);
+
+  // count shall be one, and onEachTap should have been called
+  assert (t.get_count () == 1);
+  assert (t.cnt_onEach == 1);
+
+  // we then release another key
+  t.release (2);
+
+  // count, onEach and everything else should be the same, keyrelease does not
+  // interrupt us
+  assert (t.cnt_onFinish == 0);
+  assert (t.cnt_onReset == 0);
+  assert (t.get_count () == 1);
+  assert (t.cnt_onEach == 1);
+
+  // releasing the tap-dance key finishes off the sequence, after a timeout
+  t.release (42);
+  for (int c = 0; c < 40; c++) {
+    t.cycle ();
+  }
+
+  // finished and reset
+  assert (t.cnt_onFinish == 1);
+  assert (t.cnt_onReset == 1);
+
+  // at this point, everything should be reset to default, save our test counters
+  assert (t.get_count () == 0);
+}
+
 int
 main (void) {
 
@@ -342,6 +380,7 @@ main (void) {
   test_one_tap_with_interrupt_after ();
   test_one_tap_with_interrupt_during_release ();
   test_hold_with_interrupt ();
+  test_one_tap_with_concurrent_release ();
 
   test_tap_dance_double_one_tap ();
   test_tap_dance_double_double_tap ();
