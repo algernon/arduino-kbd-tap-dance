@@ -35,6 +35,10 @@ TapDanceKey::press (uint8_t code) {
 void
 TapDanceKey::release (uint8_t code) {
   this->pressed = false;
+  if (this->finished) {
+    this->onReset ();
+    _reset();
+  }
 }
 
 void
@@ -43,8 +47,11 @@ TapDanceKey::cycle (void) {
   if (timer == 40) {
     finished = true;
     this->onFinish ();
-    this->onReset ();
 
-    _reset ();
+    if (!this->pressed) {
+      this->onReset ();
+
+      _reset ();
+    }
   }
 }
