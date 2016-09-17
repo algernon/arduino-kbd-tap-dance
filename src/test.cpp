@@ -14,8 +14,8 @@ public:
 
   uint8_t get_count (void) { return this->count; };
   bool is_pressed (void) { return this->pressed; };
-  bool is_finished (void) { return this->finished; };
   bool is_interrupted (void) { return this->interrupted; };
+  bool is_timedout (void) { return this->timedout; };
 
   void onEachTap () { cnt_onEach++; };
   void onFinish () {
@@ -34,7 +34,7 @@ test_tapping_on_a_single_key (void) {
   // Initially, the count in zero, and states are all off
   assert (t.get_count () == 0);
   assert (t.is_pressed () == false);
-  assert (t.is_finished () == false);
+  assert (t.is_timedout() == false);
   assert (t.is_interrupted () == false);
   assert (t.cnt_onEach == 0);
   assert (t.cnt_onFinish == 0);
@@ -65,7 +65,7 @@ test_tapping_on_a_single_key (void) {
   // Cycling it 39 times (~200ms) shall almost time it out...
   for (int c = 0; c < 39; c++) {
     t.cycle ();
-    assert (t.is_finished () == false);
+    assert (t.is_timedout() == false);
   }
   assert (t.cnt_onFinish == 0);
   assert (t.cnt_onReset == 0);
@@ -82,7 +82,7 @@ test_tapping_on_a_single_key (void) {
   // at this point, everything should be reset to default, save our test counters
   assert (t.get_count () == 0);
   assert (t.is_pressed () == false);
-  assert (t.is_finished () == false);
+  assert (t.is_timedout () == false);
   assert (t.is_interrupted () == false);
 }
 
@@ -101,7 +101,7 @@ test_tapping_on_a_single_key_with_timeout_during_press (void) {
   // Cycling it 39 times (~200ms) shall almost time it out...
   for (int c = 0; c < 39; c++) {
     t.cycle ();
-    assert (t.is_finished () == false);
+    assert (t.is_timedout () == false);
   }
   assert (t.cnt_onFinish == 0);
   assert (t.cnt_onReset == 0);
@@ -118,13 +118,13 @@ test_tapping_on_a_single_key_with_timeout_during_press (void) {
   // at this point, the key is still active
   assert (t.get_count () == 1);
   assert (t.is_pressed ());
-  assert (t.is_finished ());
+  assert (t.is_timedout ());
   assert (t.is_interrupted () == false);
 
   // timing it out even further still does not reset it
   for (int c = 0; c < 80; c++) {
     t.cycle ();
-    assert (t.is_finished () == true);
+    assert (t.is_timedout () == true);
   }
   // onFinish is still only called once
   assert (t.cnt_onFinish == 1);
@@ -138,7 +138,7 @@ test_tapping_on_a_single_key_with_timeout_during_press (void) {
   // at this point, everything should be reset to default, save our test counters
   assert (t.get_count () == 0);
   assert (t.is_pressed () == false);
-  assert (t.is_finished () == false);
+  assert (t.is_timedout () == false);
   assert (t.is_interrupted () == false);
 }
 
@@ -172,7 +172,7 @@ test_one_tap_with_interrupt_after () {
   // at this point, everything should be reset to default, save our test counters
   assert (t.get_count () == 0);
   assert (t.is_pressed () == false);
-  assert (t.is_finished () == false);
+  assert (t.is_timedout () == false);
   assert (t.is_interrupted () == false);
 }
 
@@ -202,7 +202,7 @@ test_one_tap_with_interrupt_during_release () {
   // at this point, everything should be reset to default, save our test counters
   assert (t.get_count () == 0);
   assert (t.is_pressed () == false);
-  assert (t.is_finished () == false);
+  assert (t.is_timedout () == false);
   assert (t.is_interrupted () == false);
 }
 
@@ -221,7 +221,7 @@ test_hold_with_interrupt (void) {
   // Cycling it 39 times (~200ms) shall almost time it out...
   for (int c = 0; c < 39; c++) {
     t.cycle ();
-    assert (t.is_finished () == false);
+    assert (t.is_timedout () == false);
   }
   assert (t.cnt_onFinish == 0);
   assert (t.cnt_onReset == 0);
@@ -238,7 +238,7 @@ test_hold_with_interrupt (void) {
   // at this point, the key is still active
   assert (t.get_count () == 1);
   assert (t.is_pressed ());
-  assert (t.is_finished ());
+  assert (t.is_timedout ());
   assert (t.is_interrupted () == false);
 
   // pressing any other key interrupts us
@@ -256,7 +256,7 @@ test_hold_with_interrupt (void) {
   // at this point, everything should be reset to default, save our test counters
   assert (t.get_count () == 0);
   assert (t.is_pressed () == false);
-  assert (t.is_finished () == false);
+  assert (t.is_timedout () == false);
   assert (t.is_interrupted () == false);
 }
 

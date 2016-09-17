@@ -13,7 +13,6 @@ class TapDanceKey {
   uint8_t count;
   bool pressed;
   bool interrupted;
-  bool finished;
   bool timedout;
 
   virtual void onFinish (void) {};

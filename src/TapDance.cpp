@@ -10,7 +10,6 @@ TapDanceKey::_reset (void) {
   count = 0;
   timer = 0;
   pressed = false;
-  finished = false;
   interrupted = false;
   timedout = false;
 }
@@ -26,7 +25,6 @@ TapDanceKey::press (uint8_t code) {
   }
 
   this->interrupted = true;
-  this->finished = true;
   this->onFinish ();
 
   if (!this->pressed || !this->timedout) {
@@ -39,7 +37,7 @@ TapDanceKey::press (uint8_t code) {
 void
 TapDanceKey::release (uint8_t code) {
   this->pressed = false;
-  if (this->finished) {
+  if (this->timedout || this->interrupted) {
     this->onReset ();
     _reset();
   }
@@ -50,7 +48,6 @@ TapDanceKey::cycle (void) {
   timer++;
   if (timer == 40) {
     timedout = true;
-    finished = true;
     this->onFinish ();
 
     if (!this->pressed) {
