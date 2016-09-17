@@ -14,6 +14,7 @@ class TapDanceKey {
   bool pressed;
   bool interrupted;
   bool finished;
+  bool timedout;
 
   virtual void onFinish (void) {};
   virtual void onReset (void) {};

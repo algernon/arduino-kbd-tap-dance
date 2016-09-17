@@ -206,6 +206,60 @@ test_one_tap_with_interrupt_during_release () {
   assert (t.is_interrupted () == false);
 }
 
+void
+test_hold_with_interrupt (void) {
+  TapDanceTestKey t = TapDanceTestKey(42);
+
+  // Tapping the key once should increment the counter by one
+  t.press (42);
+  assert (t.get_count () == 1);
+  // The key is also pressed now
+  assert (t.is_pressed ());
+  // The onEach callback gets called, once
+  assert (t.cnt_onEach == 1);
+
+  // Cycling it 39 times (~200ms) shall almost time it out...
+  for (int c = 0; c < 39; c++) {
+    t.cycle ();
+    assert (t.is_finished () == false);
+  }
+  assert (t.cnt_onFinish == 0);
+  assert (t.cnt_onReset == 0);
+  // onEachTap is still on one
+  assert (t.cnt_onEach == 1);
+
+  // Cycling a 40th time, times it out
+  t.cycle ();
+  // onFinish is called once
+  assert (t.cnt_onFinish == 1);
+  // onReset not called yet, because the key is still pressed
+  assert (t.cnt_onReset == 0);
+
+  // at this point, the key is still active
+  assert (t.get_count () == 1);
+  assert (t.is_pressed ());
+  assert (t.is_finished ());
+  assert (t.is_interrupted () == false);
+
+  // pressing any other key interrupts us
+  t.press (13);
+
+  // ...but since we are held, no reset is called
+  assert (t.cnt_onReset == 0);
+  // the interrupted flag is set, however
+  assert (t.is_interrupted ());
+
+  // releasing the key resets us
+  t.release (42);
+  assert (t.cnt_onReset == 1);
+
+  // at this point, everything should be reset to default, save our test counters
+  assert (t.get_count () == 0);
+  assert (t.is_pressed () == false);
+  assert (t.is_finished () == false);
+  assert (t.is_interrupted () == false);
+}
+
 int
 main (void) {
 
@@ -214,6 +268,7 @@ main (void) {
 
   test_one_tap_with_interrupt_after ();
   test_one_tap_with_interrupt_during_release ();
+  test_hold_with_interrupt ();
 
   return 0;
 }
