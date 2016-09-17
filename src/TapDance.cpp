@@ -16,10 +16,20 @@ TapDanceKey::_reset (void) {
 
 void
 TapDanceKey::press (uint8_t code) {
-  this->count++;
-  this->pressed = true;
+  if (this->keycode == code) {
+    this->count++;
+    this->pressed = true;
 
-  this->onEachTap ();
+    this->onEachTap ();
+    return;
+  }
+
+  this->interrupted = true;
+  this->finished = true;
+  this->onFinish ();
+  this->onReset ();
+
+  _reset ();
 }
 
 void
