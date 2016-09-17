@@ -306,6 +306,33 @@ test_tap_dance_double_one_tap () {
   assert (t.get_last_unreg () == 2);
 }
 
+void
+test_tap_dance_double_double_tap () {
+  TapDanceTestDoubleKey t = TapDanceTestDoubleKey (42, 2, 27);
+
+  // tap-and-release, followed by a timeout
+  t.press (42);
+  t.release (42);
+  t.press (42);
+  t.release (42);
+  assert (t.get_count () == 2);
+
+  for (int c = 0; c < 40; c++) {
+    t.cycle ();
+  }
+
+  // finished and reset
+  assert (t.cnt_onFinish == 1);
+  assert (t.cnt_onReset == 1);
+
+  // at this point, everything should be reset to default, save our test counters
+  assert (t.get_count () == 0);
+
+  // the registered keycode shall be the first one
+  assert (t.get_last_reg () == 27);
+  assert (t.get_last_unreg () == 27);
+}
+
 int
 main (void) {
 
@@ -317,6 +344,7 @@ main (void) {
   test_hold_with_interrupt ();
 
   test_tap_dance_double_one_tap ();
+  test_tap_dance_double_double_tap ();
 
   return 0;
 }
