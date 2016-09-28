@@ -1,12 +1,13 @@
 CXX ?= g++
 
-check: kbd-test
-	./kbd-test
+check: test/tap-dance
+	test/tap-dance
 
 clean:
-	rm -f kbd-test
+	rm -rf test/
 
-kbd-test: src/TapDance.cpp src/TapDance.h src/test.cpp
-	${CXX} -I. src/TapDance.cpp src/test.cpp -o kbd-test
+test/tap-dance: src/TapDance.cpp src/TapDance.h src/test/test-tap-dance.cpp
+	install -d test
+	${CXX} -Isrc src/TapDance.cpp src/test/test-tap-dance.cpp -o $@
 
 .PHONY: check clean
