@@ -57,7 +57,7 @@ OneShotKey::release (uint8_t code) {
   if (this->keycode == code)
     this->pressed = false;
 
-  if (this->timer >= 40 || (this->cancel && code == this->keycode)) {
+  if (this->cancel && code == this->keycode) {
     this->unregister_code (this->keycode);
     this->onDeactivate ();
     _reset();
@@ -76,9 +76,13 @@ OneShotKey::cycle (void) {
   if (timer < 40)
     timer++;
 
-  if (timer == 40 && !this->pressed) {
-    this->unregister_code (this->keycode);
-    this->onDeactivate ();
-    _reset ();
+  if (timer == 40) {
+    if (!this->pressed) {
+      this->unregister_code (this->keycode);
+      this->onDeactivate ();
+      _reset ();
+    } else {
+      this->cancel = true;
+    }
   }
 }
