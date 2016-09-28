@@ -10,7 +10,8 @@ class OneShotKey {
  protected:
   uint16_t timer;
   uint8_t keycode;
-  uint8_t count;
+  bool active;
+  bool sticky;
   bool cancelled;
 
   virtual void register_code (uint8_t code) = 0;

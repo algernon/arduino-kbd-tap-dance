@@ -16,7 +16,9 @@ public:
 
   uint8_t cnt_onActivate, cnt_onDeactivate, last_reg_kc, last_unreg_kc;
 
-  uint8_t get_count (void) { return this->count; };
+  bool get_active (void) { return this->active; };
+  bool get_sticky (void) { return this->sticky; };
+
   void onActivate () { cnt_onActivate++; };
   void onDeactivate () { cnt_onDeactivate++; };
 };
@@ -63,19 +65,63 @@ test_oneshot_cancel_by_keypress (void) {
   // we do not deactivate when another key is pressed...
   assert (t.cnt_onDeactivate == 0);
   assert (t.last_reg_kc == 42);
+  assert (t.get_active () == true);
 
   // we deactivate on the next scan
   t.cycle ();
 
   assert (t.cnt_onDeactivate == 1);
   assert (t.last_unreg_kc == 42);
+  assert (t.get_active () == false);
 
   // the next key pressed will not touch the one-shot key
   t.press (2);
   t.release (2);
-  assert (t.get_count () == 0);
+  assert (t.get_active () == false);
   assert (t.cnt_onActivate == 1);
   assert (t.cnt_onDeactivate == 1);
+}
+
+void
+test_oneshot_sticky (void) {
+  OneShotTestKey t = OneShotTestKey (42);
+
+  t.press (42);
+  t.release (42);
+  t.cycle ();
+
+  assert (t.get_sticky () == false);
+
+  t.press (42);
+  t.release (42);
+  t.cycle ();
+
+  // double-tapping activates once, but the stickyness is enabled
+  assert (t.cnt_onActivate == 1);
+  assert (t.get_active () == true);
+  assert (t.get_sticky () == true);
+  assert (t.last_reg_kc == 42);
+
+  // tapping any number of keys, when sticky, do not deactivate
+  for (uint8_t i = 1; i < 10; i++) {
+    t.press (i);
+    t.release (i);
+    t.cycle ();
+  }
+  assert (t.cnt_onDeactivate == 0);
+  assert (t.get_active () == true);
+  assert (t.get_sticky () == true);
+  assert (t.last_unreg_kc == 0);
+
+  // tapping a third time disables stickyness
+  t.press (42);
+  t.release (42);
+  t.cycle ();
+
+  assert (t.cnt_onDeactivate == 1);
+  assert (t.get_active () == false);
+  assert (t.get_sticky () == false);
+  assert (t.last_unreg_kc == 42);
 }
 
 int
@@ -83,6 +129,7 @@ main (void) {
 
   test_oneshot_activate_deactivate_with_timeout ();
   test_oneshot_cancel_by_keypress ();
+  test_oneshot_sticky ();
 
   return 0;
 }
