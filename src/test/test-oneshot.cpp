@@ -124,12 +124,37 @@ test_oneshot_sticky (void) {
   assert (t.last_unreg_kc == 42);
 }
 
+void
+test_oneshot_held (void) {
+  OneShotTestKey t = OneShotTestKey (42);
+
+  t.press (42);
+
+  assert (t.cnt_onActivate == 1);
+  assert (t.get_active () == true);
+  assert (t.get_sticky () == false);
+  assert (t.last_reg_kc == 42);
+
+  // holding the key prevents timing out
+  for (uint8_t c = 0; c < 80; c++) {
+    t.cycle ();
+    assert (t.get_active () == true);
+  }
+
+  // releasing the key immediately times it out
+  t.release (42);
+  assert (t.cnt_onDeactivate == 1);
+  assert (t.get_active () == false);
+  assert (t.last_unreg_kc == 42);
+}
+
 int
 main (void) {
 
   test_oneshot_activate_deactivate_with_timeout ();
   test_oneshot_cancel_by_keypress ();
   test_oneshot_sticky ();
+  test_oneshot_held ();
 
   return 0;
 }

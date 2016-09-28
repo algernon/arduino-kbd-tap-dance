@@ -10,6 +10,7 @@ OneShotKey::_reset (void) {
   sticky = false;
   active = false;
   timer = 0;
+  pressed = false;
 }
 
 void
@@ -24,6 +25,7 @@ OneShotKey::press (uint8_t code) {
     return;
   }
 
+  this->pressed = true;
   if (this->active) {
     if (this->sticky) {
       this->unregister_code (this->keycode);
@@ -44,6 +46,17 @@ OneShotKey::press (uint8_t code) {
 
 void
 OneShotKey::release (uint8_t code) {
+  if (!this->active)
+    return;
+
+  if (this->keycode == code)
+    this->pressed = false;
+
+  if (this->timer >= 40) {
+    this->unregister_code (this->keycode);
+    this->onDeactivate ();
+    _reset();
+  }
 }
 
 void
@@ -55,9 +68,12 @@ OneShotKey::cycle (void) {
     return;
   }
 
-  timer++;
-  if (timer == 40) {
+  if (timer < 40)
+    timer++;
+
+  if (timer == 40 && !this->pressed) {
     this->unregister_code (this->keycode);
     this->onDeactivate ();
+    _reset ();
   }
 }

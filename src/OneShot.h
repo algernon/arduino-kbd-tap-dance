@@ -12,6 +12,7 @@ class OneShotKey {
   uint8_t keycode;
   bool active;
   bool sticky;
+  bool pressed;
 
   virtual void register_code (uint8_t code) = 0;
   virtual void unregister_code (uint8_t code) = 0;
