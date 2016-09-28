@@ -11,6 +11,7 @@ class OneShotKey {
   uint16_t timer;
   uint8_t keycode;
   uint8_t count;
+  bool cancelled;
 
   virtual void register_code (uint8_t code) = 0;
   virtual void unregister_code (uint8_t code) = 0;
