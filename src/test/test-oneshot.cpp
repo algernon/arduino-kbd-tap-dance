@@ -21,6 +21,12 @@ public:
 
   void onActivate () { cnt_onActivate++; };
   void onDeactivate () { cnt_onDeactivate++; };
+
+  bool shouldIgnore (uint8_t code) {
+    if (code == 132 || code == 133)
+      return true;
+    return false;
+  }
 };
 
 void
@@ -206,6 +212,34 @@ test_oneshot_hold_and_tap_through_timeout (void) {
   assert (t.last_unreg_kc == 42);
 }
 
+void
+test_oneshot_ignore_codes (void) {
+  OneShotTestKey t = OneShotTestKey (42);
+
+  t.press (42);
+  t.release (42);
+
+  // Pressing ignored keys does not cancel the one-shotness
+  t.press (132);
+  t.release (132);
+  t.cycle ();
+  t.press (133);
+  t.release (133);
+  t.cycle ();
+
+  assert (t.cnt_onActivate == 1);
+  assert (t.get_active () == true);
+  assert (t.get_sticky () == false);
+  assert (t.last_reg_kc == 42);
+
+  // pressing a non-ignored one does cancel us
+  t.press (1);
+  t.release (1);
+  t.cycle ();
+
+  assert (t.get_active () == false);
+}
+
 int
 main (void) {
 
@@ -215,6 +249,8 @@ main (void) {
   test_oneshot_held ();
   test_oneshot_hold_and_tap ();
   test_oneshot_hold_and_tap_through_timeout ();
+
+  test_oneshot_ignore_codes ();
 
   return 0;
 }

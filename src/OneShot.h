@@ -21,6 +21,8 @@ class OneShotKey {
   virtual void onActivate (void) {};
   virtual void onDeactivate (void) {};
 
+  virtual bool shouldIgnore (uint8_t code);
+
  public:
   OneShotKey (uint8_t code);
   void press (uint8_t code);

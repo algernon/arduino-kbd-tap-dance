@@ -5,6 +5,11 @@ OneShotKey::OneShotKey (uint8_t code) {
   _reset ();
 }
 
+bool
+OneShotKey::shouldIgnore (uint8_t code) {
+  return false;
+}
+
 void
 OneShotKey::_reset (void) {
   sticky = false;
@@ -22,9 +27,9 @@ OneShotKey::press (uint8_t code) {
 
     if (this->active) {
       if (this->pressed)
-        this->cancel = true;
+        this->cancel = !this->shouldIgnore (code);
       else
-        this->active = false;
+        this->active = this->shouldIgnore (code);
     }
 
     return;
