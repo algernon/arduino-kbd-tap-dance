@@ -148,6 +148,29 @@ test_oneshot_held (void) {
   assert (t.last_unreg_kc == 42);
 }
 
+void
+test_oneshot_hold_and_tap (void) {
+  OneShotTestKey t = OneShotTestKey (42);
+
+  t.press (42);
+  t.cycle ();
+
+  // holding prevents cancellation
+  for (uint8_t c = 0; c < 32; c++) {
+    t.press (c);
+    t.release (c);
+    t.cycle ();
+
+    assert (t.get_active () == true);
+  }
+
+  // releasing cancels immediately
+  t.release (42);
+  assert (t.cnt_onDeactivate == 1);
+  assert (t.get_active () == false);
+  assert (t.last_unreg_kc == 42);
+}
+
 int
 main (void) {
 
@@ -155,6 +178,7 @@ main (void) {
   test_oneshot_cancel_by_keypress ();
   test_oneshot_sticky ();
   test_oneshot_held ();
+  test_oneshot_hold_and_tap ();
 
   return 0;
 }
