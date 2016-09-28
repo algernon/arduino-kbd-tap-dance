@@ -56,6 +56,7 @@ test_oneshot_cancel_by_keypress (void) {
 
   t.press (42);
   t.release (42);
+  t.cycle ();
 
   assert (t.cnt_onActivate == 1);
   assert (t.last_reg_kc == 42);
@@ -65,7 +66,6 @@ test_oneshot_cancel_by_keypress (void) {
   // we do not deactivate when another key is pressed...
   assert (t.cnt_onDeactivate == 0);
   assert (t.last_reg_kc == 42);
-  assert (t.get_active () == true);
 
   // we deactivate on the next scan
   t.cycle ();

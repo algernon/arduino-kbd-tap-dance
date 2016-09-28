@@ -1,5 +1,5 @@
 CXX ?= g++
-CXXFLAGS = -Wall
+CXXFLAGS = -Wall -O0 -ggdb3
 
 check: test/tap-dance test/oneshot
 	test/tap-dance
