@@ -52,7 +52,7 @@ TapDanceKey::release (uint8_t code) {
 void
 TapDanceKey::cycle (void) {
   timer++;
-  if (timer == 40) {
+  if (timer == TAP_DANCE_TIMEOUT_DEFAULT) {
     timedout = true;
     this->onFinish ();
 

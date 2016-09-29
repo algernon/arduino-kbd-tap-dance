@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define ONESHOT_TIMEOUT_DEFAULT 40
+
 class OneShotKey {
  private:
   void _reset (void);

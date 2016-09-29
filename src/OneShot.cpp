@@ -78,10 +78,10 @@ OneShotKey::cycle (void) {
     return;
   }
 
-  if (timer < 40)
+  if (timer < ONESHOT_TIMEOUT_DEFAULT)
     timer++;
 
-  if (timer == 40) {
+  if (timer == ONESHOT_TIMEOUT_DEFAULT) {
     if (!this->pressed) {
       this->unregister_code (this->keycode);
       this->onDeactivate ();

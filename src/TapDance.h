@@ -1,6 +1,8 @@
 #ifndef _KBDHACKS_TAPDANCE_H
 #define _KBDHACKS_TAPDANCE_H 1
 
+#define TAP_DANCE_TIMEOUT_DEFAULT 40
+
 #include <stdint.h>
 
 class TapDanceKey {
