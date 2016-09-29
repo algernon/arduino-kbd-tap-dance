@@ -15,10 +15,13 @@ OneShotKey::shouldIgnore (uint8_t code) {
   return false;
 }
 
-uint16_t
+void
 OneShotKey::timeout (uint16_t new_timeout) {
-  if (new_timeout)
-    this->shot_timeout = new_timeout;
+  this->shot_timeout = new_timeout;
+}
+
+uint16_t
+OneShotKey::timeout (void) {
   return this->shot_timeout;
 }
 

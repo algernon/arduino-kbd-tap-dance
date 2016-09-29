@@ -34,7 +34,8 @@ class OneShotKey {
   void release (uint8_t code);
   void cycle (void);
 
-  uint16_t timeout (uint16_t new_timeout);
+  uint16_t timeout (void);
+  void timeout (uint16_t new_timeout);
 };
 
 #endif

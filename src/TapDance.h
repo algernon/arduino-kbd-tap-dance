@@ -30,7 +30,8 @@ class TapDanceKey {
   void release (uint8_t code);
   void cycle (void);
 
-  uint16_t timeout (uint16_t new_timeout);
+  void timeout (uint16_t new_timeout);
+  uint16_t timeout (void);
 };
 
 class TapDanceDoubleKey : public TapDanceKey {

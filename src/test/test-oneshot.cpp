@@ -245,7 +245,7 @@ test_oneshot_custom_timeout (void) {
   OneShotTestKey t = OneShotTestKey (42);
 
   t.timeout (42);
-  assert (t.timeout (0) == 42);
+  assert (t.timeout () == 42);
 
   t.press (42);
   t.release (42);

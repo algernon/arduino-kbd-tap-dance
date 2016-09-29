@@ -376,7 +376,7 @@ test_tap_dance_custom_timeout (void) {
   TapDanceTestKey t = TapDanceTestKey (42);
 
   t.timeout (42);
-  assert (t.timeout (0) == 42);
+  assert (t.timeout () == 42);
 
   t.press (42);
   t.release (42);
@@ -393,7 +393,7 @@ test_tap_dance_custom_timeout (void) {
   assert (t.get_count () == 0);
 
   TapDanceKey t2 = TapDanceKey (42, 132);
-  assert (t2.timeout(0) == 132);
+  assert (t2.timeout() == 132);
 }
 
 int

@@ -10,10 +10,13 @@ TapDanceKey::TapDanceKey (uint8_t code, uint16_t timeout) : TapDanceKey (code) {
   this->timeout (timeout);
 }
 
-uint16_t
+void
 TapDanceKey::timeout (uint16_t new_timeout) {
-  if (new_timeout)
-    this->tap_timeout = new_timeout;
+  this->tap_timeout = new_timeout;
+}
+
+uint16_t
+TapDanceKey::timeout (void) {
   return this->tap_timeout;
 }
 
