@@ -240,6 +240,28 @@ test_oneshot_ignore_codes (void) {
   assert (t.get_active () == false);
 }
 
+void
+test_oneshot_custom_timeout (void) {
+  OneShotTestKey t = OneShotTestKey (42);
+
+  t.timeout (42);
+  assert (t.timeout (0) == 42);
+
+  t.press (42);
+  t.release (42);
+  for (uint8_t i = 0; i < 41; i++) {
+    t.cycle ();
+  }
+  assert (t.cnt_onActivate == 1);
+  assert (t.cnt_onDeactivate == 0);
+  assert (t.get_active () == true);
+
+  t.cycle ();
+  assert (t.cnt_onActivate == 1);
+  assert (t.cnt_onDeactivate == 1);
+  assert (t.get_active () == false);
+}
+
 int
 main (void) {
 
@@ -251,6 +273,8 @@ main (void) {
   test_oneshot_hold_and_tap_through_timeout ();
 
   test_oneshot_ignore_codes ();
+
+  test_oneshot_custom_timeout ();
 
   return 0;
 }

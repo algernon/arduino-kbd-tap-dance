@@ -2,7 +2,15 @@
 
 TapDanceKey::TapDanceKey (uint8_t code) {
   keycode = code;
+  tap_timeout = TAP_DANCE_TIMEOUT_DEFAULT;
   _reset ();
+}
+
+uint16_t
+TapDanceKey::timeout (uint16_t new_timeout) {
+  if (new_timeout)
+    this->tap_timeout = new_timeout;
+  return this->tap_timeout;
 }
 
 void
@@ -52,7 +60,7 @@ TapDanceKey::release (uint8_t code) {
 void
 TapDanceKey::cycle (void) {
   timer++;
-  if (timer == TAP_DANCE_TIMEOUT_DEFAULT) {
+  if (timer == this->tap_timeout) {
     timedout = true;
     this->onFinish ();
 

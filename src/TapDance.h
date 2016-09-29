@@ -11,6 +11,7 @@ class TapDanceKey {
 
  protected:
   uint16_t timer;
+  uint16_t tap_timeout;
   uint8_t keycode;
   uint8_t count;
   bool pressed;
@@ -26,6 +27,7 @@ class TapDanceKey {
   void press (uint8_t code);
   void release (uint8_t code);
   void cycle (void);
+  uint16_t timeout (uint16_t new_timeout);
 };
 
 class TapDanceDoubleKey : public TapDanceKey {

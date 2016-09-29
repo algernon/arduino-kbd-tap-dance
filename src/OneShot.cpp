@@ -2,12 +2,20 @@
 
 OneShotKey::OneShotKey (uint8_t code) {
   keycode = code;
+  shot_timeout = ONESHOT_TIMEOUT_DEFAULT;
   _reset ();
 }
 
 bool
 OneShotKey::shouldIgnore (uint8_t code) {
   return false;
+}
+
+uint16_t
+OneShotKey::timeout (uint16_t new_timeout) {
+  if (new_timeout)
+    this->shot_timeout = new_timeout;
+  return this->shot_timeout;
 }
 
 void
@@ -78,10 +86,10 @@ OneShotKey::cycle (void) {
     return;
   }
 
-  if (timer < ONESHOT_TIMEOUT_DEFAULT)
+  if (timer < this->shot_timeout)
     timer++;
 
-  if (timer == ONESHOT_TIMEOUT_DEFAULT) {
+  if (timer == this->shot_timeout) {
     if (!this->pressed) {
       this->unregister_code (this->keycode);
       this->onDeactivate ();
