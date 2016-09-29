@@ -6,6 +6,10 @@ TapDanceKey::TapDanceKey (uint8_t code) {
   _reset ();
 }
 
+TapDanceKey::TapDanceKey (uint8_t code, uint16_t timeout) : TapDanceKey (code) {
+  this->timeout (timeout);
+}
+
 uint16_t
 TapDanceKey::timeout (uint16_t new_timeout) {
   if (new_timeout)

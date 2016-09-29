@@ -6,6 +6,10 @@ OneShotKey::OneShotKey (uint8_t code) {
   _reset ();
 }
 
+OneShotKey::OneShotKey (uint8_t code, uint16_t timeout) : OneShotKey (code) {
+  this->timeout (timeout);
+}
+
 bool
 OneShotKey::shouldIgnore (uint8_t code) {
   return false;

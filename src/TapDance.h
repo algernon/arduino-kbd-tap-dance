@@ -24,9 +24,12 @@ class TapDanceKey {
 
  public:
   TapDanceKey (uint8_t code);
+  TapDanceKey (uint8_t code, uint16_t timeout);
+
   void press (uint8_t code);
   void release (uint8_t code);
   void cycle (void);
+
   uint16_t timeout (uint16_t new_timeout);
 };
 

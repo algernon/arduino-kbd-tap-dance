@@ -28,6 +28,8 @@ class OneShotKey {
 
  public:
   OneShotKey (uint8_t code);
+  OneShotKey (uint8_t code, uint16_t timeout);
+
   void press (uint8_t code);
   void release (uint8_t code);
   void cycle (void);
