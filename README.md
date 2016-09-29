@@ -1,5 +1,5 @@
-A generic tap-dance implementation
-==================================
+Generic multi-use key implementation
+====================================
 
 Primarily aimed at the [Keyboard.io Model 01][kbdio], but likely usable by any
 other keyboard built with an Arduino at heart. But before we go and look at the
@@ -7,6 +7,12 @@ details, let me first say that this has not been tested on any real hardware,
 and as such, is more a proof of concept, than anything else.
 
  [kbdio]: https://shop.keyboard.io/
+
+What is in the library?
+-----------------------
+
+The library has the base classes for both tap-dance and one-shot keys, see below
+for an explanation what these are.
 
 What is tap-dance?
 ------------------
@@ -41,8 +47,7 @@ the first tap, `b` on the second, and you press this key, followed by - say -
 `c` quickly, then the system will register `ac`. And if you keep holding the
 key, it will register `a`, and let the OS trigger the auto-repeat.
 
-How to use it?
---------------
+### How to use it?
 
 The way this works, is that the tap-dance keys `press` and `release` methods
 have to be called for each and every keypress (so the library can notice any
@@ -69,8 +74,15 @@ Have a look at the `TapDanceDoubleKey` class for a simple, straightforward way
 to add functionality to a tap-dance key, and the test suite for examples on
 usage.
 
+What are one-shot keys?
+-----------------------
+
+One-shot keys are a different kind of multi-use keys than tap-dance keys: they
+activate immediately when pressed, but deactivate after the next keypress, too.
+Mostly useful for modifiers and layer switching keys.
+
 License
--------
+=======
 
 The code is released under the terms of the GNU GPL, version 3 or later. See the
 COPYING file for details.
