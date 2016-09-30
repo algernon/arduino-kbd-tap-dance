@@ -121,10 +121,10 @@ OneShotKey::cycle (void) {
 
 void
 OneShotModifierKey::onActivate (void) {
-  this->register_code (this->keycode);
+  this->register_code (this->kc);
 }
 
 void
 OneShotModifierKey::onDeactivate (void) {
-  this->unregister_code (this->keycode);
+  this->unregister_code (this->kc);
 }

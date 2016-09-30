@@ -54,6 +54,9 @@ class OneShotKey {
 };
 
 class OneShotModifierKey : public OneShotKey {
+ private:
+  uint8_t kc;
+
  protected:
   virtual void register_code (uint8_t code) = 0;
   virtual void unregister_code (uint8_t code) = 0;
@@ -62,8 +65,8 @@ class OneShotModifierKey : public OneShotKey {
   virtual void onDeactivate (void);
 
  public:
-  OneShotModifierKey (uint8_t code) : OneShotKey (code) {};
-  OneShotModifierKey (uint8_t code, uint16_t timeout) : OneShotKey (code, timeout) {};
+  OneShotModifierKey (uint8_t code, uint8_t kc) : OneShotKey (code) { this->kc = kc; };
+  OneShotModifierKey (uint8_t code, uint8_t kc, uint16_t timeout) : OneShotKey (code, timeout) { this->kc = kc; };
 };
 
 #endif

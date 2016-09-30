@@ -47,10 +47,10 @@ protected:
   virtual void unregister_code (uint8_t code) { last_kc_unreg = code; };
 
 public:
-  OneShotModifierTestKey (uint8_t code) : OneShotModifierKey (code) {
+  OneShotModifierTestKey (uint8_t code, uint8_t kc) : OneShotModifierKey (code, kc) {
     last_kc_reg = last_kc_unreg = 0;
   };
-  OneShotModifierTestKey (uint8_t code, uint16_t timeout) : OneShotModifierKey (code, timeout) {
+  OneShotModifierTestKey (uint8_t code, uint8_t kc, uint16_t timeout) : OneShotModifierKey (code, kc, timeout) {
     last_kc_reg = last_kc_unreg = 0;
   };
 
@@ -278,10 +278,10 @@ test_oneshot_custom_timeout (void) {
 
 void
 test_oneshot_modifiers (void) {
-  OneShotModifierTestKey t = OneShotModifierTestKey (42);
+  OneShotModifierTestKey t = OneShotModifierTestKey (42, 132);
 
   t.press (42);
-  assert (t.last_kc_reg == 42);
+  assert (t.last_kc_reg == 132);
   t.release (42);
   t.cycle ();
 
@@ -289,7 +289,7 @@ test_oneshot_modifiers (void) {
   t.release (1);
   t.cycle ();
 
-  assert (t.last_kc_unreg == 42);
+  assert (t.last_kc_unreg == 132);
 }
 
 int
