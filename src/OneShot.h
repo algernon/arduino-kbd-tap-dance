@@ -36,9 +36,6 @@ class OneShotKey {
   bool pressed;
   bool cancel;
 
-  virtual void register_code (uint8_t code) = 0;
-  virtual void unregister_code (uint8_t code) = 0;
-
   virtual void onActivate (void) {};
   virtual void onDeactivate (void) {};
 
@@ -54,6 +51,19 @@ class OneShotKey {
 
   uint16_t timeout (void);
   void timeout (uint16_t new_timeout);
+};
+
+class OneShotModifierKey : public OneShotKey {
+ protected:
+  virtual void register_code (uint8_t code) = 0;
+  virtual void unregister_code (uint8_t code) = 0;
+
+  virtual void onActivate (void);
+  virtual void onDeactivate (void);
+
+ public:
+  OneShotModifierKey (uint8_t code) : OneShotKey (code) {};
+  OneShotModifierKey (uint8_t code, uint16_t timeout) : OneShotKey (code, timeout) {};
 };
 
 #endif
