@@ -47,18 +47,18 @@ TapDanceKey::_reset (void) {
   timedout = false;
 }
 
-void
+bool
 TapDanceKey::press (uint8_t code) {
   if (this->keycode == code) {
     this->count++;
     this->pressed = true;
 
     this->onEachTap ();
-    return;
+    return false;
   }
 
   if (this->count == 0)
-    return;
+    return true;
 
   this->interrupted = true;
   this->onFinish ();
@@ -68,18 +68,21 @@ TapDanceKey::press (uint8_t code) {
 
     _reset ();
   }
+
+  return true;
 }
 
-void
+bool
 TapDanceKey::release (uint8_t code) {
   if (code != this->keycode)
-    return;
+    return true;
 
   this->pressed = false;
   if (this->timedout || this->interrupted) {
     this->onReset ();
     _reset();
   }
+  return false;
 }
 
 void
