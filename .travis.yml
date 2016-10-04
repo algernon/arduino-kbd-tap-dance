@@ -1,0 +1,10 @@
+language: cpp
+script: make check
+dist: trusty
+sudo: required
+compiler:
+  - gcc
+  - clang
+os:
+  - linux
+  - osx
