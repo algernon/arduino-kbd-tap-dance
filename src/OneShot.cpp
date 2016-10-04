@@ -29,7 +29,7 @@ OneShotKey::OneShotKey (uint8_t code, uint16_t timeout) : OneShotKey (code) {
 }
 
 bool
-OneShotKey::shouldIgnore (uint8_t code) {
+OneShotKey::shouldIgnore (uint8_t) {
   return false;
 }
 
