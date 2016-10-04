@@ -1,5 +1,12 @@
 CXX ?= g++
-CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11
+CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11 -fPIC -DPIC
+
+SOURCES = src/TapDance.cpp src/OneShot.cpp src/Leader.cpp
+HEADERS = src/TapDance.h src/OneShot.h src/Leader.h
+
+OBJECTS = ${SOURCES:.cpp=.o}
+
+all: libtapdance.a
 
 check: test/tap-dance test/oneshot test/leader
 	test/tap-dance
@@ -7,18 +14,19 @@ check: test/tap-dance test/oneshot test/leader
 	test/leader
 
 clean:
-	rm -rf test/
+	rm -rf test libtapdance.a ${OBJECTS}
 
-test/tap-dance: src/TapDance.cpp src/TapDance.h src/test/test-tap-dance.cpp
+test:
 	install -d test
-	${CXX} ${CXXFLAGS} -Isrc src/TapDance.cpp src/test/test-tap-dance.cpp -o $@
 
-test/oneshot: src/OneShot.cpp src/OneShot.h src/test/test-oneshot.cpp
-	install -d test
-	${CXX} ${CXXFLAGS} -Isrc src/OneShot.cpp src/test/test-oneshot.cpp -o $@
+test/%: src/test/test-%.cpp test libtapdance.a
+	${CXX} ${CXXFLAGS} -Isrc -L. -o $@ $< -ltapdance
 
-test/leader: src/Leader.cpp src/Leader.h src/test/test-leader.cpp
-	install -d test
-	${CXX} ${CXXFLAGS} -Isrc src/Leader.cpp src/test/test-leader.cpp -o $@
+libtapdance.a: ${OBJECTS}
+	${AR} cr $@ ${OBJECTS}
+	ranlib $@
 
-.PHONY: check clean
+%.o: %.cpp %.h
+	${CXX} ${CXXFLAGS} -Isrc -L. -o $@ -c $<
+
+.PHONY: check clean all
