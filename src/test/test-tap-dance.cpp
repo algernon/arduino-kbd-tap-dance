@@ -414,6 +414,20 @@ test_tap_dance_custom_timeout (void) {
   assert (t2.timeout() == 132);
 }
 
+void
+test_tap_dance_callback_signal (void) {
+  TapDanceTestKey t = TapDanceTestKey (42);
+
+  assert (t.press (1) == true);
+  assert (t.release (1) == true);
+
+  assert (t.press (42) == false);
+  assert (t.release (42) == false);
+  t.cycle ();
+  assert (t.press (1) == true);
+  assert (t.release (1) == true);
+}
+
 int
 main (void) {
 
@@ -429,6 +443,7 @@ main (void) {
   test_tap_dance_double_double_tap ();
 
   test_tap_dance_custom_timeout ();
+  test_tap_dance_callback_signal ();
 
   return 0;
 }

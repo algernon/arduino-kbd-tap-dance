@@ -292,6 +292,16 @@ test_oneshot_modifiers (void) {
   assert (t.last_kc_unreg == 132);
 }
 
+void
+test_oneshot_caller_signal (void) {
+  OneShotTestKey t = OneShotTestKey (42);
+
+  assert (t.press (1) == true);
+  assert (t.press (42) == false);
+  assert (t.release (42) == false);
+  assert (t.release (1) == true);
+}
+
 int
 main (void) {
 
@@ -302,6 +312,7 @@ main (void) {
   test_oneshot_hold_and_tap ();
   test_oneshot_hold_and_tap_through_timeout ();
 
+  test_oneshot_caller_signal ();
   test_oneshot_ignore_codes ();
 
   test_oneshot_custom_timeout ();
