@@ -1,6 +1,8 @@
 Generic multi-use key implementation
 ====================================
 
+[![Build Status](https://travis-ci.org/algernon/arduino-kbd-tap-dance.svg?branch=master)](https://travis-ci.org/algernon/arduino-kbd-tap-dance)
+
 Primarily aimed at the [Keyboard.io Model 01][kbdio], but likely usable by any
 other keyboard built with an Arduino at heart. But before we go and look at the
 details, let me first say that this has not been tested on any real hardware,
