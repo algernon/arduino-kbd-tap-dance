@@ -18,14 +18,13 @@
 
 #include "OneShot.h"
 
-OneShotKey::OneShotKey (uint8_t code) {
-  keycode = code;
-  shot_timeout = ONESHOT_TIMEOUT_DEFAULT;
-  _reset ();
+OneShotKey::OneShotKey (uint8_t code) : OneShotKey (code, ONESHOT_TIMEOUT_DEFAULT) {
 }
 
-OneShotKey::OneShotKey (uint8_t code, uint16_t timeout) : OneShotKey (code) {
-  this->timeout (timeout);
+OneShotKey::OneShotKey (uint8_t code, uint16_t timeout) {
+  keycode = code;
+  timer = Timer (timeout);
+  _reset ();
 }
 
 bool
@@ -34,20 +33,11 @@ OneShotKey::shouldIgnore (uint8_t) {
 }
 
 void
-OneShotKey::timeout (uint16_t new_timeout) {
-  this->shot_timeout = new_timeout;
-}
-
-uint16_t
-OneShotKey::timeout (void) {
-  return this->shot_timeout;
-}
-
-void
 OneShotKey::_reset (void) {
+  timer.reset ();
+
   sticky = false;
   active = false;
-  timer = 0;
   pressed = false;
   cancel = false;
 }
@@ -103,16 +93,15 @@ OneShotKey::release (uint8_t code) {
 
 void
 OneShotKey::cycle (void) {
-  if (!this->active && this->timer) {
+  if (!this->active && this->timer > 0) {
     this->onDeactivate ();
     _reset ();
     return;
   }
 
-  if (timer < this->shot_timeout)
-    timer++;
+  timer++;
 
-  if (timer == this->shot_timeout) {
+  if (timer.timedout ()) {
     if (!this->pressed) {
       this->onDeactivate ();
       _reset ();

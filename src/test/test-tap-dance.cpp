@@ -390,31 +390,6 @@ test_one_tap_with_concurrent_release () {
 }
 
 void
-test_tap_dance_custom_timeout (void) {
-  TapDanceTestKey t = TapDanceTestKey (42);
-
-  t.timeout (42);
-  assert (t.timeout () == 42);
-
-  t.press (42);
-  t.release (42);
-  for (uint8_t i = 0; i < 41; i++) {
-    t.cycle ();
-  }
-  assert (t.cnt_onFinish == 0);
-  assert (t.cnt_onReset == 0);
-  assert (t.get_count () == 1);
-
-  t.cycle ();
-  assert (t.cnt_onFinish == 1);
-  assert (t.cnt_onReset == 1);
-  assert (t.get_count () == 0);
-
-  TapDanceKey t2 = TapDanceKey (42, 132);
-  assert (t2.timeout() == 132);
-}
-
-void
 test_tap_dance_callback_signal (void) {
   TapDanceTestKey t = TapDanceTestKey (42);
 
@@ -442,7 +417,6 @@ main (void) {
   test_tap_dance_double_one_tap ();
   test_tap_dance_double_double_tap ();
 
-  test_tap_dance_custom_timeout ();
   test_tap_dance_callback_signal ();
 
   return 0;

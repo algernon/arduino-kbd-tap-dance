@@ -19,17 +19,17 @@
 #ifndef _KBDHACKS_TAPDANCE_H
 #define _KBDHACKS_TAPDANCE_H 1
 
-#define TAP_DANCE_TIMEOUT_DEFAULT 40
-
+#include "TimeOut.h"
 #include <stdint.h>
+
+#define TAP_DANCE_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
 
 class TapDanceKey {
  private:
   void _reset (void);
 
  protected:
-  uint16_t timer;
-  uint16_t tap_timeout;
+  Timer timer;
   uint8_t keycode;
   uint8_t count;
   bool pressed;
@@ -47,9 +47,6 @@ class TapDanceKey {
   bool press (uint8_t code);
   bool release (uint8_t code);
   void cycle (void);
-
-  void timeout (uint16_t new_timeout);
-  uint16_t timeout (void);
 };
 
 class TapDanceDoubleKey : public TapDanceKey {

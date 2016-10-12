@@ -20,29 +20,18 @@
 
 #include <string.h>
 
-LeaderKey::LeaderKey (uint8_t code) {
+LeaderKey::LeaderKey (uint8_t code, uint16_t timeout) {
   keycode = code;
-  leader_timeout = LEADER_TIMEOUT_DEFAULT;
+  timer = Timer (timeout);
   _reset ();
 }
 
-LeaderKey::LeaderKey (uint8_t code, uint16_t timeout) : LeaderKey (code) {
-  this->timeout (timeout);
-}
-
-void
-LeaderKey::timeout (uint16_t new_timeout) {
-  this->leader_timeout = new_timeout;
-}
-
-uint16_t
-LeaderKey::timeout (void) {
-  return this->leader_timeout;
+LeaderKey::LeaderKey (uint8_t code) : LeaderKey (code, LEADER_TIMEOUT_DEFAULT) {
 }
 
 void
 LeaderKey::_reset (void) {
-  timer = 0;
+  timer.reset ();
   seq_length = 0;
   need_reset = false;
   memset (sequence, 0, LEADER_SEQUENCE_LENGTH_MAX);
@@ -91,7 +80,7 @@ LeaderKey::cycle (void) {
 
   timer++;
 
-  if (timer >= this->leader_timeout) {
+  if (timer.timedout ()) {
     _reset ();
   }
 }

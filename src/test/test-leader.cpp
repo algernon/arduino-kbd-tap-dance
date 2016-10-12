@@ -56,7 +56,7 @@ public:
     return this->seq_length;
   }
 
-  uint16_t get_timer (void) {
+  Timer get_timer (void) {
     return this->timer;
   }
 
@@ -89,6 +89,11 @@ test_leader_not_pressed (void) {
   assert (t.press (1) == true);
   assert (t.release (1) == true);
   t.cycle ();
+  assert (t.get_timer () == 0);
+
+  for (int i = 0; i < TIMEOUT_DEFAULT * 2; i++)
+    t.cycle ();
+
   assert (t.get_timer () == 0);
 }
 

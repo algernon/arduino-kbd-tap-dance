@@ -18,30 +18,20 @@
 
 #include "TapDance.h"
 
-TapDanceKey::TapDanceKey (uint8_t code) {
+TapDanceKey::TapDanceKey (uint8_t code) : TapDanceKey (code, TAP_DANCE_TIMEOUT_DEFAULT) {
+}
+
+TapDanceKey::TapDanceKey (uint8_t code, uint16_t timeout) {
   keycode = code;
-  tap_timeout = TAP_DANCE_TIMEOUT_DEFAULT;
+  timer = Timer (timeout);
   _reset ();
-}
-
-TapDanceKey::TapDanceKey (uint8_t code, uint16_t timeout) : TapDanceKey (code) {
-  this->timeout (timeout);
-}
-
-void
-TapDanceKey::timeout (uint16_t new_timeout) {
-  this->tap_timeout = new_timeout;
-}
-
-uint16_t
-TapDanceKey::timeout (void) {
-  return this->tap_timeout;
 }
 
 void
 TapDanceKey::_reset (void) {
+  timer.reset ();
+
   count = 0;
-  timer = 0;
   pressed = false;
   interrupted = false;
   timedout = false;
@@ -88,7 +78,7 @@ TapDanceKey::release (uint8_t code) {
 void
 TapDanceKey::cycle (void) {
   timer++;
-  if (timer == this->tap_timeout) {
+  if (timer.timedout () && !timedout) {
     timedout = true;
     this->onFinish ();
 

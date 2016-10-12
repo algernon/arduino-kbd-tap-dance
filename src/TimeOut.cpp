@@ -16,45 +16,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _KBDHACKS_LEADER_H
-#define _KBDHACKS_LEADER_H 1
-
-#include <stdint.h>
-
 #include "TimeOut.h"
 
-#define LEADER_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
-#define LEADER_SEQUENCE_LENGTH_MAX 3
+Timer::Timer (uint16_t timeout) {
+  _timeout = timeout;
+  reset ();
+}
 
-class LeaderKey {
- private:
-  void _reset (void);
+Timer::Timer (void) : Timer (TIMEOUT_DEFAULT) {
+}
 
- protected:
-  enum LookupResult {
-    NOT_FOUND,
-    PARTIAL,
-    MATCH
-  };
+void
+Timer::reset (void) {
+  _timer = 0;
+}
 
-  Timer timer;
+uint16_t
+Timer::operator++ (int) {
+  if (!timedout ())
+    return _timer++;
+  else
+    return _timer;
+}
 
-  uint8_t keycode;
-  uint8_t seq_length;
-  uint8_t sequence[LEADER_SEQUENCE_LENGTH_MAX];
-  bool need_reset;
+bool
+Timer::operator== (uint16_t rhs) {
+  return _timer == rhs;
+}
 
-  virtual LookupResult lookup (void) = 0;
+bool
+Timer::operator> (uint16_t rhs) {
+  return _timer > rhs;
+}
 
- public:
-  LeaderKey (uint8_t keycode);
-  LeaderKey (uint8_t keycode, uint16_t timeout);
+bool
+Timer::timedout (void) {
+  return _timer == _timeout;
+}
 
-  bool press (uint8_t keycode);
-  bool release (uint8_t keycode);
-  void cycle (void);
+uint16_t
+Timer::timeout (void) {
+  return _timeout;
+}
 
-  virtual void action (void) = 0;
-};
-
-#endif
+void
+Timer::timeout (uint16_t new_timeout) {
+  _timeout = new_timeout;
+}

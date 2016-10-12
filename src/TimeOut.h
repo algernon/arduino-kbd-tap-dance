@@ -16,45 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _KBDHACKS_LEADER_H
-#define _KBDHACKS_LEADER_H 1
+#ifndef _KBDHACKS_TIMEOUT_H
+#define _KBDHACKS_TIMEOUT_H 1
 
 #include <stdint.h>
 
-#include "TimeOut.h"
+#define TIMEOUT_DEFAULT 40
 
-#define LEADER_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
-#define LEADER_SEQUENCE_LENGTH_MAX 3
-
-class LeaderKey {
- private:
-  void _reset (void);
-
+class Timer {
  protected:
-  enum LookupResult {
-    NOT_FOUND,
-    PARTIAL,
-    MATCH
-  };
-
-  Timer timer;
-
-  uint8_t keycode;
-  uint8_t seq_length;
-  uint8_t sequence[LEADER_SEQUENCE_LENGTH_MAX];
-  bool need_reset;
-
-  virtual LookupResult lookup (void) = 0;
+  uint16_t _timer;
+  uint16_t _timeout;
 
  public:
-  LeaderKey (uint8_t keycode);
-  LeaderKey (uint8_t keycode, uint16_t timeout);
+  Timer (void);
+  Timer (uint16_t timeout);
 
-  bool press (uint8_t keycode);
-  bool release (uint8_t keycode);
-  void cycle (void);
+  uint16_t timeout (void);
+  void timeout (uint16_t new_timeout);
 
-  virtual void action (void) = 0;
+  uint16_t operator++ (int);
+  bool operator== (const uint16_t rhs);
+  bool operator> (const uint16_t rhs);
+
+  bool timedout (void);
+
+  void reset (void);
 };
 
 #endif
