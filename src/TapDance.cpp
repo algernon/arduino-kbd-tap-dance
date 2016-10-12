@@ -78,6 +78,7 @@ TapDanceKey::release (uint8_t code) {
 void
 TapDanceKey::cycle (void) {
   timer++;
+
   if (timer.timedout () && !timedout) {
     timedout = true;
     this->onFinish ();
