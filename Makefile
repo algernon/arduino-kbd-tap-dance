@@ -2,7 +2,7 @@ CXX ?= g++
 CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11 -Wextra
 
 SOURCES = src/TapDance.cpp src/OneShot.cpp src/Leader.cpp
-HEADERS = src/TapDance.h src/OneShot.h src/Leader.h
+HEADERS = ${SOURCES:.cpp=.h}
 
 OBJECTS = ${SOURCES:.cpp=.o}
 
