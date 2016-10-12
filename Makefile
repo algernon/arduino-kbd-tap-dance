@@ -8,7 +8,8 @@ OBJECTS = ${SOURCES:.cpp=.o}
 
 all: libtapdance.a
 
-check: test/tap-dance test/oneshot test/leader
+check: test/timer test/tap-dance test/oneshot test/leader
+	test/timer
 	test/tap-dance
 	test/oneshot
 	test/leader
