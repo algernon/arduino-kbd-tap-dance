@@ -16,8 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <CppUTest/TestHarness.h>
+#include <CppUTest/CommandLineTestRunner.h>
+
 #include "OneShot.h"
-#include "assert.h"
 
 class OneShotTestKey : public OneShotKey {
 public:
@@ -57,17 +59,19 @@ public:
   uint8_t last_kc_reg, last_kc_unreg;
 };
 
-void
-test_oneshot_activate_deactivate_with_timeout (void) {
+TEST_GROUP (OneShot) {
+};
+
+TEST (OneShot, activate_deactivate_with_timeout) {
   OneShotTestKey t = OneShotTestKey(42);
 
   t.press (1);
   t.release (1);
-  assert (t.cnt_onActivate == 0);
+  CHECK (t.cnt_onActivate == 0);
 
   t.press (42);
   // the key should activate immediately
-  assert (t.cnt_onActivate == 1);
+  CHECK (t.cnt_onActivate == 1);
 
   // releasing the key shall not immediately unregister
   t.release (42);
@@ -75,59 +79,57 @@ test_oneshot_activate_deactivate_with_timeout (void) {
   // timing it out shall deactivate the key
   for (int c = 0; c < 39; c++) {
     t.cycle ();
-    assert (t.cnt_onDeactivate == 0);
+    CHECK (t.cnt_onDeactivate == 0);
   }
   t.cycle ();
-  assert (t.cnt_onDeactivate == 1);
+  CHECK (t.cnt_onDeactivate == 1);
 }
 
-void
-test_oneshot_cancel_by_keypress (void) {
+TEST (OneShot, cancel_by_keypress) {
   OneShotTestKey t = OneShotTestKey (42);
 
   t.press (42);
   t.release (42);
   t.cycle ();
 
-  assert (t.cnt_onActivate == 1);
+  CHECK (t.cnt_onActivate == 1);
 
   t.press (1);
 
   // we do not deactivate when another key is pressed...
-  assert (t.cnt_onDeactivate == 0);
+  CHECK (t.cnt_onDeactivate == 0);
 
   // we deactivate on the next scan
   t.cycle ();
 
-  assert (t.cnt_onDeactivate == 1);
-  assert (t.get_active () == false);
+  CHECK (t.cnt_onDeactivate == 1);
+  CHECK (t.get_active () == false);
 
   // the next key pressed will not touch the one-shot key
   t.press (2);
   t.release (2);
-  assert (t.get_active () == false);
-  assert (t.cnt_onActivate == 1);
-  assert (t.cnt_onDeactivate == 1);
+  CHECK (t.get_active () == false);
+  CHECK (t.cnt_onActivate == 1);
+  CHECK (t.cnt_onDeactivate == 1);
 }
 
-void
-test_oneshot_sticky (void) {
+TEST (OneShot, sticky) {
   OneShotTestKey t = OneShotTestKey (42);
 
   t.press (42);
   t.release (42);
   t.cycle ();
 
-  assert (t.get_sticky () == false);
+  CHECK (t.get_sticky () == false);
 
   t.press (42);
   t.release (42);
   t.cycle ();
 
   // double-tapping activates once, but the stickyness is enabled
-  assert (t.cnt_onActivate == 1);
-  assert (t.get_active () == true);
-  assert (t.get_sticky () == true);
+  CHECK (t.cnt_onActivate == 1);
+  CHECK (t.get_active () == true);
+  CHECK (t.get_sticky () == true);
 
   // tapping any number of keys, when sticky, do not deactivate
   for (uint8_t i = 1; i < 10; i++) {
@@ -135,44 +137,42 @@ test_oneshot_sticky (void) {
     t.release (i);
     t.cycle ();
   }
-  assert (t.cnt_onDeactivate == 0);
-  assert (t.get_active () == true);
-  assert (t.get_sticky () == true);
+  CHECK (t.cnt_onDeactivate == 0);
+  CHECK (t.get_active () == true);
+  CHECK (t.get_sticky () == true);
 
   // tapping a third time disables stickyness
   t.press (42);
   t.release (42);
   t.cycle ();
 
-  assert (t.cnt_onDeactivate == 1);
-  assert (t.get_active () == false);
-  assert (t.get_sticky () == false);
+  CHECK (t.cnt_onDeactivate == 1);
+  CHECK (t.get_active () == false);
+  CHECK (t.get_sticky () == false);
 }
 
-void
-test_oneshot_held (void) {
+TEST (OneShot, held) {
   OneShotTestKey t = OneShotTestKey (42);
 
   t.press (42);
 
-  assert (t.cnt_onActivate == 1);
-  assert (t.get_active () == true);
-  assert (t.get_sticky () == false);
+  CHECK (t.cnt_onActivate == 1);
+  CHECK (t.get_active () == true);
+  CHECK (t.get_sticky () == false);
 
   // holding the key prevents timing out
   for (uint8_t c = 0; c < 80; c++) {
     t.cycle ();
-    assert (t.get_active () == true);
+    CHECK (t.get_active () == true);
   }
 
   // releasing the key immediately times it out
   t.release (42);
-  assert (t.cnt_onDeactivate == 1);
-  assert (t.get_active () == false);
+  CHECK (t.cnt_onDeactivate == 1);
+  CHECK (t.get_active () == false);
 }
 
-void
-test_oneshot_hold_and_tap (void) {
+TEST (OneShot, hold_and_tap) {
   OneShotTestKey t = OneShotTestKey (42);
 
   t.press (42);
@@ -184,17 +184,16 @@ test_oneshot_hold_and_tap (void) {
     t.release (c);
     t.cycle ();
 
-    assert (t.get_active () == true);
+    CHECK (t.get_active () == true);
   }
 
   // releasing cancels immediately
   t.release (42);
-  assert (t.cnt_onDeactivate == 1);
-  assert (t.get_active () == false);
+  CHECK (t.cnt_onDeactivate == 1);
+  CHECK (t.get_active () == false);
 }
 
-void
-test_oneshot_hold_and_tap_through_timeout (void) {
+TEST (OneShot, hold_and_tap_through_timeout) {
   OneShotTestKey t = OneShotTestKey (42);
 
   t.press (42);
@@ -206,29 +205,28 @@ test_oneshot_hold_and_tap_through_timeout (void) {
     t.release (c);
     t.cycle ();
 
-    assert (t.get_active () == true);
+    CHECK (t.get_active () == true);
   }
 
   // holding through a timeout still prevents cancellation
   for (uint8_t c = 0; c < 32; c++) {
     t.cycle ();
 
-    assert (t.get_active () == true);
+    CHECK (t.get_active () == true);
   }
 
   // tapping further keys, we are still active
   t.press (1);
   t.release (1);
-  assert (t.get_active () == true);
+  CHECK (t.get_active () == true);
 
   // releasing cancels immediately
   t.release (42);
-  assert (t.cnt_onDeactivate == 1);
-  assert (t.get_active () == false);
+  CHECK (t.cnt_onDeactivate == 1);
+  CHECK (t.get_active () == false);
 }
 
-void
-test_oneshot_ignore_codes (void) {
+TEST (OneShot, ignore_codes) {
   OneShotTestKey t = OneShotTestKey (42);
 
   t.press (42);
@@ -242,24 +240,26 @@ test_oneshot_ignore_codes (void) {
   t.release (133);
   t.cycle ();
 
-  assert (t.cnt_onActivate == 1);
-  assert (t.get_active () == true);
-  assert (t.get_sticky () == false);
+  CHECK (t.cnt_onActivate == 1);
+  CHECK (t.get_active () == true);
+  CHECK (t.get_sticky () == false);
 
   // pressing a non-ignored one does cancel us
   t.press (1);
   t.release (1);
   t.cycle ();
 
-  assert (t.get_active () == false);
+  CHECK (t.get_active () == false);
 }
 
-void
-test_oneshot_modifiers (void) {
+TEST_GROUP (OneShotMod) {
+};
+
+TEST (OneShotMod, modifiers) {
   OneShotModifierTestKey t = OneShotModifierTestKey (42, 132);
 
   t.press (42);
-  assert (t.last_kc_reg == 132);
+  CHECK (t.last_kc_reg == 132);
   t.release (42);
   t.cycle ();
 
@@ -267,30 +267,14 @@ test_oneshot_modifiers (void) {
   t.release (1);
   t.cycle ();
 
-  assert (t.last_kc_unreg == 132);
+  CHECK (t.last_kc_unreg == 132);
 }
 
-void
-test_oneshot_caller_signal (void) {
+TEST (OneShot, caller_signal) {
   OneShotTestKey t = OneShotTestKey (42);
 
-  assert (t.press (1) == true);
-  assert (t.press (42) == false);
-  assert (t.release (42) == false);
-  assert (t.release (1) == true);
-}
-
-void
-test_oneshot (void) {
-  test_oneshot_activate_deactivate_with_timeout ();
-  test_oneshot_cancel_by_keypress ();
-  test_oneshot_sticky ();
-  test_oneshot_held ();
-  test_oneshot_hold_and_tap ();
-  test_oneshot_hold_and_tap_through_timeout ();
-
-  test_oneshot_caller_signal ();
-  test_oneshot_ignore_codes ();
-
-  test_oneshot_modifiers ();
+  CHECK (t.press (1) == true);
+  CHECK (t.press (42) == false);
+  CHECK (t.release (42) == false);
+  CHECK (t.release (1) == true);
 }

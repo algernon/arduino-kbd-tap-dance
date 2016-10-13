@@ -16,8 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <CppUTest/TestHarness.h>
+#include <CppUTest/CommandLineTestRunner.h>
+
 #include "Leader.h"
-#include "assert.h"
 
 class LeaderTestKey : public LeaderKey {
 public:
@@ -65,40 +67,41 @@ public:
   }
 };
 
-void
-test_leader_timeout (void) {
+TEST_GROUP(Leader) {
+};
+
+
+TEST(Leader, simple_timeout) {
   LeaderTestKey t = LeaderTestKey (42);
 
-  assert (t.press (42) == false);
+  CHECK (t.press (42) == false);
   // the first item in the sequence is the leader itself
-  assert (t.get_seq_len () == 1);
-  assert (t.release (42) == false);
+  CHECK (t.get_seq_len () == 1);
+  CHECK (t.release (42) == false);
   t.cycle ();
 
   for (uint8_t i = 0; i <= LEADER_TIMEOUT_DEFAULT; i++) {
     t.cycle ();
   }
 
-  assert (t.get_seq_len () == 0);
+  CHECK (t.get_seq_len () == 0);
 }
 
-void
-test_leader_not_pressed (void) {
+TEST(Leader, leader_not_pressed) {
   LeaderTestKey t = LeaderTestKey (42);
 
-  assert (t.press (1) == true);
-  assert (t.release (1) == true);
+  CHECK (t.press (1) == true);
+  CHECK (t.release (1) == true);
   t.cycle ();
-  assert (t.get_timer () == 0);
+  CHECK (t.get_timer () == 0);
 
   for (int i = 0; i < TIMEOUT_DEFAULT * 2; i++)
     t.cycle ();
 
-  assert (t.get_timer () == 0);
+  CHECK (t.get_timer () == 0);
 }
 
-void
-test_leader_interrupt (void) {
+TEST(Leader, interrupt) {
   LeaderTestKey t = LeaderTestKey (42);
 
   t.press (42);
@@ -106,16 +109,16 @@ test_leader_interrupt (void) {
   t.release (42);
   t.cycle ();
 
-  assert (t.press (3) == false);
+  CHECK (t.press (3) == false);
   t.cycle ();
-  assert (t.release (3) == false);
+  CHECK (t.release (3) == false);
   t.cycle ();
 
-  assert (t.get_timer () == 0);
-  assert (t.get_seq_len () == 0);
+  CHECK (t.get_timer () == 0);
+  CHECK (t.get_seq_len () == 0);
 }
 
-void test_leader_easy_match (void) {
+TEST (Leader, easy_match) {
   LeaderTestKey t = LeaderTestKey (42);
 
   t.press (42);
@@ -123,17 +126,17 @@ void test_leader_easy_match (void) {
   t.release (42);
   t.cycle ();
 
-  assert (t.press (2) == false);
+  CHECK (t.press (2) == false);
   t.cycle ();
-  assert (t.release (2) == false);
+  CHECK (t.release (2) == false);
   t.cycle ();
 
-  assert (t.cnt_FullMatch == 1);
-  assert (t.get_timer () == 0);
-  assert (t.get_seq_len () == 0);
+  CHECK (t.cnt_FullMatch == 1);
+  CHECK (t.get_timer () == 0);
+  CHECK (t.get_seq_len () == 0);
 }
 
-void test_leader_two_seq_match (void) {
+TEST (Leader, two_seq_match) {
   LeaderTestKey t = LeaderTestKey (42);
 
   t.press (42);
@@ -141,30 +144,21 @@ void test_leader_two_seq_match (void) {
   t.release (42);
   t.cycle ();
 
-  assert (t.press (1) == false);
+  CHECK (t.press (1) == false);
   t.cycle ();
-  assert (t.release (1) == false);
-  t.cycle ();
-
-  assert (t.cnt_FullMatch == 0);
-  assert (t.get_timer () > 0);
-  assert (t.get_seq_len () == 2);
-
-  assert (t.press (2) == false);
-  t.cycle ();
-  assert (t.release (2) == false);
+  CHECK (t.release (1) == false);
   t.cycle ();
 
-  assert (t.cnt_FullMatch == 1);
-  assert (t.get_timer () == 0);
-  assert (t.get_seq_len () == 0);
-}
+  CHECK (t.cnt_FullMatch == 0);
+  CHECK (t.get_timer () > 0);
+  CHECK (t.get_seq_len () == 2);
 
-void
-test_leader (void) {
-  test_leader_not_pressed ();
-  test_leader_timeout ();
-  test_leader_interrupt ();
-  test_leader_easy_match ();
-  test_leader_two_seq_match ();
+  CHECK (t.press (2) == false);
+  t.cycle ();
+  CHECK (t.release (2) == false);
+  t.cycle ();
+
+  CHECK (t.cnt_FullMatch == 1);
+  CHECK (t.get_timer () == 0);
+  CHECK (t.get_seq_len () == 0);
 }

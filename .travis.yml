@@ -19,6 +19,8 @@ install:
   - git submodule sync --recursive
   - git submodule update --init --recursive
   - popd
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq cpputest
 script:
   - make all arduino ARDUINO_PATH=../../arduino-1.6.11 KBDIO_PATH=../../arduino-local
   - make check

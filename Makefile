@@ -13,13 +13,13 @@ OBJECTS = ${SOURCES:.cpp=.o}
 all: libtapdance.a
 
 check: t/testsuite
-	$^
+	$^ -v
 
 clean:
 	rm -rf t/testsuite libtapdance.a ${OBJECTS} arduino
 
 t/testsuite: ${TEST_SOURCES} libtapdance.a
-	${CXX} ${CXXFLAGS} -Isrc -L. -o $@ ${TEST_SOURCES} -ltapdance
+	${CXX} ${CXXFLAGS} -Isrc -L. -o $@ ${TEST_SOURCES} -ltapdance -lCppUTest
 
 libtapdance.a: ${OBJECTS}
 	${AR} cr $@ ${OBJECTS}

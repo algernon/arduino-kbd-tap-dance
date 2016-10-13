@@ -16,15 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-extern void test_timer (void);
-extern void test_tap_dance (void);
-extern void test_oneshot (void);
-extern void test_leader (void);
+#include <CppUTest/TestHarness.h>
+#include <CppUTest/CommandLineTestRunner.h>
 
 int
-main (void) {
-  test_timer ();
-  test_tap_dance ();
-  test_oneshot ();
-  test_leader ();
+main (int argc, char **argv)
+{
+  return CommandLineTestRunner::RunAllTests (argc, argv);
 }

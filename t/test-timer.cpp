@@ -16,56 +16,57 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "TimeOut.h"
-#include "assert.h"
+#include <CppUTest/TestHarness.h>
+#include <CppUTest/CommandLineTestRunner.h>
 
-void
-test_timer_timing_out (void) {
+#include "TimeOut.h"
+
+TEST_GROUP (TimeOut) {
+};
+
+TEST (TimeOut, timing_out) {
   Timer t = Timer ();
 
-  assert (t == 0);
+  CHECK (t == 0);
   t++;
-  assert (t == 1);
+  CHECK (t == 1);
 
   for (int i = 0; i < TIMEOUT_DEFAULT; i++) {
     t++;
   }
 
-  assert (t == TIMEOUT_DEFAULT);
-  assert (t.timedout () == true);
+  CHECK (t == TIMEOUT_DEFAULT);
+  CHECK (t.timedout () == true);
 }
 
-void
-test_timer_custom_timeout (void) {
+TEST (TimeOut, custom_timeout) {
   Timer t = Timer (TIMEOUT_DEFAULT * 2);
 
-  assert (t == 0);
+  CHECK (t == 0);
 
   for (int i = 0; i < TIMEOUT_DEFAULT + 2; i++) {
     t++;
   }
-  assert (t.timedout () == false);
+  CHECK (t.timedout () == false);
 
   for (int i = 0; i < TIMEOUT_DEFAULT; i++) {
     t++;
   }
-  assert (t.timedout () == true);
+  CHECK (t.timedout () == true);
 }
 
-void
-test_timer_reset (void) {
+TEST (TimeOut, reset) {
   Timer t = Timer ();
 
   for (int i = 0; i < TIMEOUT_DEFAULT * 2; i++)
     t++;
 
   t.reset ();
-  assert (t == 0);
-  assert (t.timedout () == false);
+  CHECK (t == 0);
+  CHECK (t.timedout () == false);
 }
 
-void
-test_timer_in_flight_timeout_change (void) {
+TEST (TimeOut, in_flight_timeout_change) {
   Timer t = Timer ();
 
   for (int i = 0; i < TIMEOUT_DEFAULT - 1; i++)
@@ -76,19 +77,11 @@ test_timer_in_flight_timeout_change (void) {
   for (int i = 0; i < TIMEOUT_DEFAULT; i++)
     t++;
 
-  assert (t.timedout () == false);
+  CHECK (t.timedout () == false);
 
   t++;
   t++;
   t++;
 
-  assert (t.timedout () == true);
-}
-
-void
-test_timer (void) {
-  test_timer_timing_out ();
-  test_timer_custom_timeout ();
-  test_timer_reset ();
-  test_timer_in_flight_timeout_change ();
+  CHECK (t.timedout () == true);
 }
