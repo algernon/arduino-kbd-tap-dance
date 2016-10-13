@@ -2,7 +2,7 @@ BOARD    						= model01
 MCU									= atmega32u4
 
 KBDIO_PATH					= ${HOME}/src/ext/keyboardio-hw
-ARDUINO_PATH				= ${HOME}/install/arduino-1.6.11
+ARDUINO_PATH				= ${HOME}/install/arduino
 ARDUINO_TOOLS_PATH	= $(ARDUINO_PATH)/hardware/tools
 FQBN								= keyboardio:avr:model01
 BUILD_PATH				 := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'build')
