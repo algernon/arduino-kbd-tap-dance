@@ -16,7 +16,7 @@ check: t/testsuite
 	$^
 
 clean:
-	rm -rf t/testsuite libtapdance.a ${OBJECTS}
+	rm -rf t/testsuite libtapdance.a ${OBJECTS} arduino
 
 t/testsuite: ${TEST_SOURCES} libtapdance.a
 	${CXX} ${CXXFLAGS} -Isrc -L. -o $@ ${TEST_SOURCES} -ltapdance
