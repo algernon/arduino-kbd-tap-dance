@@ -403,9 +403,8 @@ test_tap_dance_callback_signal (void) {
   assert (t.release (1) == true);
 }
 
-int
-main (void) {
-
+void
+test_tap_dance (void) {
   test_tapping_on_a_single_key ();
   test_tapping_on_a_single_key_with_timeout_during_press ();
 
@@ -418,6 +417,4 @@ main (void) {
   test_tap_dance_double_double_tap ();
 
   test_tap_dance_callback_signal ();
-
-  return 0;
 }

@@ -160,14 +160,11 @@ void test_leader_two_seq_match (void) {
   assert (t.get_seq_len () == 0);
 }
 
-int
-main (void) {
-
+void
+test_leader (void) {
   test_leader_not_pressed ();
   test_leader_timeout ();
   test_leader_interrupt ();
   test_leader_easy_match ();
   test_leader_two_seq_match ();
-
-  return 0;
 }

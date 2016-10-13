@@ -4,15 +4,16 @@ CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11 -Wextra
 SOURCES = src/TimeOut.cpp src/TapDance.cpp src/OneShot.cpp src/Leader.cpp
 HEADERS = ${SOURCES:.cpp=.h}
 
+TEST_SOURCES = src/test/test-timer.cpp src/test/test-tap-dance.cpp \
+               src/test/test-oneshot.cpp src/test/test-leader.cpp \
+               src/test/testsuite.cpp
+
 OBJECTS = ${SOURCES:.cpp=.o}
 
 all: libtapdance.a
 
-check: test/timer test/tap-dance test/oneshot test/leader
-	test/timer
-	test/tap-dance
-	test/oneshot
-	test/leader
+check: test/testsuite
+	$^
 
 clean:
 	rm -rf test libtapdance.a ${OBJECTS}
@@ -20,8 +21,8 @@ clean:
 test:
 	install -d test
 
-test/%: src/test/test-%.cpp test libtapdance.a
-	${CXX} ${CXXFLAGS} -Isrc -L. -o $@ $< -ltapdance
+test/testsuite: ${TEST_SOURCES} test libtapdance.a
+	${CXX} ${CXXFLAGS} -Isrc -L. -o $@ ${TEST_SOURCES} -ltapdance
 
 libtapdance.a: ${OBJECTS}
 	${AR} cr $@ ${OBJECTS}

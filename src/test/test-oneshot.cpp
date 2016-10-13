@@ -280,9 +280,8 @@ test_oneshot_caller_signal (void) {
   assert (t.release (1) == true);
 }
 
-int
-main (void) {
-
+void
+test_oneshot (void) {
   test_oneshot_activate_deactivate_with_timeout ();
   test_oneshot_cancel_by_keypress ();
   test_oneshot_sticky ();
@@ -294,6 +293,4 @@ main (void) {
   test_oneshot_ignore_codes ();
 
   test_oneshot_modifiers ();
-
-  return 0;
 }

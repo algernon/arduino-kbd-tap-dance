@@ -85,13 +85,10 @@ test_timer_in_flight_timeout_change (void) {
   assert (t.timedout () == true);
 }
 
-int
-main (void) {
-
+void
+test_timer (void) {
   test_timer_timing_out ();
   test_timer_custom_timeout ();
   test_timer_reset ();
   test_timer_in_flight_timeout_change ();
-
-  return 0;
 }
