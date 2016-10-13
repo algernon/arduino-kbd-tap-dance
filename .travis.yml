@@ -1,5 +1,4 @@
 language: cpp
-script: make check
 dist: trusty
 sudo: required
 compiler:
@@ -8,3 +7,19 @@ compiler:
 os:
   - linux
   - osx
+before_install:
+  - pushd ..
+  - wget http://downloads.arduino.cc/arduino-1.6.11-linux64.tar.xz
+  - tar xf arduino-1.6.11-linux64.tar.xz
+  - popd
+install:
+  - pushd ..
+  - mkdir -p arduino-local/hardware/keyboardio
+  - git clone https://github.com/keyboardio/Arduino-Boards arduino-local/hardware/keyboardio/avr
+  - cd arduino-local/hardware/keyboardio/avr
+  - git submodule sync --recursive
+  - git submodule update --init --recursive
+  - popd
+script:
+  - make all arduino ARDUINO_PATH=../../arduino-1.6.11 KBDIO_PATH=../../arduino-local
+  - make check
