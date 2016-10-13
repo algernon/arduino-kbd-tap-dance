@@ -1,6 +1,6 @@
-/kbd-test
 /core
-/test/
+/t/testsuite
+/arduino/
 .#*
 *~
 *.o

@@ -4,24 +4,21 @@ CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11 -Wextra
 SOURCES = src/TimeOut.cpp src/TapDance.cpp src/OneShot.cpp src/Leader.cpp
 HEADERS = ${SOURCES:.cpp=.h}
 
-TEST_SOURCES = src/test/test-timer.cpp src/test/test-tap-dance.cpp \
-               src/test/test-oneshot.cpp src/test/test-leader.cpp \
-               src/test/testsuite.cpp
+TEST_SOURCES = t/test-timer.cpp t/test-tap-dance.cpp \
+               t/test-oneshot.cpp t/test-leader.cpp \
+               t/testsuite.cpp
 
 OBJECTS = ${SOURCES:.cpp=.o}
 
 all: libtapdance.a
 
-check: test/testsuite
+check: t/testsuite
 	$^
 
 clean:
-	rm -rf test libtapdance.a ${OBJECTS}
+	rm -rf t/testsuite libtapdance.a ${OBJECTS}
 
-test:
-	install -d test
-
-test/testsuite: ${TEST_SOURCES} test libtapdance.a
+t/testsuite: ${TEST_SOURCES} libtapdance.a
 	${CXX} ${CXXFLAGS} -Isrc -L. -o $@ ${TEST_SOURCES} -ltapdance
 
 libtapdance.a: ${OBJECTS}
@@ -31,4 +28,7 @@ libtapdance.a: ${OBJECTS}
 %.o: %.cpp %.h
 	${CXX} ${CXXFLAGS} -Isrc -L. -o $@ -c $<
 
-.PHONY: check clean all
+arduino:
+	make -C src -f arduino.mk all
+
+.PHONY: check clean all arduino
