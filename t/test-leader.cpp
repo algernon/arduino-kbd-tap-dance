@@ -150,7 +150,7 @@ TEST (Leader, two_seq_match) {
   t.cycle ();
 
   CHECK (t.cnt_FullMatch == 0);
-  CHECK (t.get_timer () > 0);
+  CHECK (!(t.get_timer () == 0));
   CHECK (t.get_seq_len () == 2);
 
   CHECK (t.press (2) == false);

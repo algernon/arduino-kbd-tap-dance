@@ -35,7 +35,6 @@ class Timer {
   uint16_t operator++ (int);
 
   bool operator== (const uint16_t rhs);
-  bool operator> (const uint16_t rhs);
 
   uint16_t operator() () const;
   void operator() (const uint16_t newTimeout);

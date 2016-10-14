@@ -93,7 +93,7 @@ OneShotKey::release (uint8_t code) {
 
 void
 OneShotKey::cycle (void) {
-  if (!this->active && this->timer > 0) {
+  if (!this->active && !(this->timer == 0)) {
     this->onDeactivate ();
     _reset ();
     return;

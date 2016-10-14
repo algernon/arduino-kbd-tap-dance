@@ -46,11 +46,6 @@ Timer::operator== (uint16_t rhs) {
 }
 
 bool
-Timer::operator> (uint16_t rhs) {
-  return _timer > rhs;
-}
-
-bool
 Timer::timedout (void) {
   return _timer == _timeout;
 }
