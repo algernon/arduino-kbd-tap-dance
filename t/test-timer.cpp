@@ -61,7 +61,7 @@ TEST (TimeOut, reset) {
   for (int i = 0; i < TIMEOUT_DEFAULT * 2; i++)
     t++;
 
-  t.reset ();
+  t = 0;
   CHECK (t == 0);
   CHECK (t.timedout () == false);
 }
@@ -72,7 +72,7 @@ TEST (TimeOut, in_flight_timeout_change) {
   for (int i = 0; i < TIMEOUT_DEFAULT - 1; i++)
     t++;
 
-  t.timeout (TIMEOUT_DEFAULT * 2);
+  t (TIMEOUT_DEFAULT * 2);
 
   for (int i = 0; i < TIMEOUT_DEFAULT; i++)
     t++;

@@ -20,15 +20,16 @@
 
 Timer::Timer (uint16_t timeout) {
   _timeout = timeout;
-  reset ();
+  _timer = 0;
 }
 
 Timer::Timer (void) : Timer (TIMEOUT_DEFAULT) {
 }
 
-void
-Timer::reset (void) {
-  _timer = 0;
+Timer&
+Timer::operator= (uint16_t newTimer) {
+  _timer = newTimer;
+  return *this;
 }
 
 uint16_t
@@ -55,11 +56,11 @@ Timer::timedout (void) {
 }
 
 uint16_t
-Timer::timeout (void) {
+Timer::operator() () const {
   return _timeout;
 }
 
 void
-Timer::timeout (uint16_t new_timeout) {
-  _timeout = new_timeout;
+Timer::operator() (uint16_t newTimeout) {
+  _timeout = newTimeout;
 }

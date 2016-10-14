@@ -29,7 +29,7 @@ TapDanceKey::TapDanceKey (uint8_t code, uint16_t timeout) {
 
 void
 TapDanceKey::_reset (void) {
-  timer.reset ();
+  timer = 0;
 
   count = 0;
   pressed = false;

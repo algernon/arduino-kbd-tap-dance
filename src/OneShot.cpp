@@ -34,7 +34,7 @@ OneShotKey::shouldIgnore (uint8_t) {
 
 void
 OneShotKey::_reset (void) {
-  timer.reset ();
+  timer = 0;
 
   sticky = false;
   active = false;

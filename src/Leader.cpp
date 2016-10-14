@@ -31,7 +31,7 @@ LeaderKey::LeaderKey (uint8_t code) : LeaderKey (code, LEADER_TIMEOUT_DEFAULT) {
 
 void
 LeaderKey::_reset (void) {
-  timer.reset ();
+  timer = 0;
   seq_length = 0;
   need_reset = false;
   memset (sequence, 0, LEADER_SEQUENCE_LENGTH_MAX);

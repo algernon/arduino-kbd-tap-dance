@@ -32,16 +32,17 @@ class Timer {
   Timer (void);
   Timer (uint16_t timeout);
 
-  uint16_t timeout (void);
-  void timeout (uint16_t new_timeout);
-
   uint16_t operator++ (int);
+
   bool operator== (const uint16_t rhs);
   bool operator> (const uint16_t rhs);
 
-  bool timedout (void);
+  uint16_t operator() () const;
+  void operator() (const uint16_t newTimeout);
 
-  void reset (void);
+  Timer& operator= (uint16_t newTimer);
+
+  bool timedout (void);
 };
 
 #endif
