@@ -1,7 +1,7 @@
 CXX ?= g++
 CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11 -Wextra
 
-SOURCES = src/TimeOut.cpp src/TapDance.cpp src/OneShot.cpp src/Leader.cpp
+SOURCES = src/Timer.cpp src/TapDance.cpp src/OneShot.cpp src/Leader.cpp
 HEADERS = ${SOURCES:.cpp=.h}
 
 TEST_SOURCES = t/test-timer.cpp t/test-tap-dance.cpp \

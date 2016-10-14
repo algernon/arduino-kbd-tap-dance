@@ -20,8 +20,7 @@
 #define _KBDHACKS_LEADER_H 1
 
 #include <stdint.h>
-
-#include "TimeOut.h"
+#include "Timer.h"
 
 #define LEADER_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
 #define LEADER_SEQUENCE_LENGTH_MAX 3

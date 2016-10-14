@@ -19,8 +19,8 @@
 #ifndef _KBDHACKS_TAPDANCE_H
 #define _KBDHACKS_TAPDANCE_H 1
 
-#include "TimeOut.h"
 #include <stdint.h>
+#include "Timer.h"
 
 #define TAP_DANCE_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
 

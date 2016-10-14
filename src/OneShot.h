@@ -19,9 +19,8 @@
 #ifndef _KBDHACKS_ONESHOT_H
 #define _KBDHACKS_ONESHOT_H 1
 
-#include "TimeOut.h"
-
 #include <stdint.h>
+#include "Timer.h"
 
 #define ONESHOT_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
 

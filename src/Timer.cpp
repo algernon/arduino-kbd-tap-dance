@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "TimeOut.h"
+#include "Timer.h"
 
 Timer::Timer (uint16_t timeout) {
   _timeout = timeout;

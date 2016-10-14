@@ -19,7 +19,7 @@
 #include <CppUTest/TestHarness.h>
 #include <CppUTest/CommandLineTestRunner.h>
 
-#include "TimeOut.h"
+#include "Timer.h"
 
 TEST_GROUP (TimeOut) {
 };
