@@ -20,8 +20,7 @@
 
 #include <string.h>
 
-LeaderKey::LeaderKey (uint8_t code, uint16_t timeout) {
-  keycode = code;
+LeaderKey::LeaderKey (uint8_t code, uint16_t timeout) : BasicKey (code) {
   timer = Timer (timeout);
   _reset ();
 }

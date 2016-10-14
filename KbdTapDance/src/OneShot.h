@@ -20,17 +20,17 @@
 #define _KBDHACKS_ONESHOT_H 1
 
 #include <stdint.h>
+#include "BasicKey.h"
 #include "Timer.h"
 
 #define ONESHOT_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
 
-class OneShotKey {
+class OneShotKey : public BasicKey {
  private:
   void _reset (void);
 
  protected:
   Timer timer;
-  uint8_t keycode;
   bool active;
   bool sticky;
   bool pressed;
@@ -45,9 +45,9 @@ class OneShotKey {
   OneShotKey (uint8_t code);
   OneShotKey (uint8_t code, uint16_t timeout);
 
-  bool press (uint8_t code);
-  bool release (uint8_t code);
-  void cycle (void);
+  virtual bool press (uint8_t code);
+  virtual bool release (uint8_t code);
+  virtual void cycle (void);
 };
 
 class OneShotModifierKey : public OneShotKey {

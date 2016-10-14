@@ -8,7 +8,7 @@ FQBN								= keyboardio:avr:model01
 BUILD_PATH				 := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'build')
 OUTPUT_PATH					= ../arduino
 ARDUINO_IDE_VERSION	= 100607
-SKETCH							= KbdTapDance
+SKETCH							= KbdHacks
 
 AVR_SIZE						= $(ARDUINO_TOOLS_PATH)/avr/bin/avr-size
 
@@ -31,6 +31,8 @@ compile: ${OUTPUT_PATH}
 		-tools $(ARDUINO_TOOLS_PATH) \
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \
+    -libraries ../KbdBasicKey \
+    -libraries ../KbdTapDance \
     ${VERBOSE} \
 		-build-path $(BUILD_PATH) \
 		-ide-version $(ARDUINO_IDE_VERSION) \

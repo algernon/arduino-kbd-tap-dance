@@ -21,8 +21,7 @@
 OneShotKey::OneShotKey (uint8_t code) : OneShotKey (code, ONESHOT_TIMEOUT_DEFAULT) {
 }
 
-OneShotKey::OneShotKey (uint8_t code, uint16_t timeout) {
-  keycode = code;
+OneShotKey::OneShotKey (uint8_t code, uint16_t timeout) : BasicKey (code) {
   timer = Timer (timeout);
   _reset ();
 }

@@ -21,8 +21,7 @@
 TapDanceKey::TapDanceKey (uint8_t code) : TapDanceKey (code, TAP_DANCE_TIMEOUT_DEFAULT) {
 }
 
-TapDanceKey::TapDanceKey (uint8_t code, uint16_t timeout) {
-  keycode = code;
+TapDanceKey::TapDanceKey (uint8_t code, uint16_t timeout) : BasicKey (code) {
   timer = Timer (timeout);
   _reset ();
 }

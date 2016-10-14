@@ -16,44 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _KBDHACKS_LEADER_H
-#define _KBDHACKS_LEADER_H 1
+#ifndef _KBDHACKS_BASICKEY_H
+#define _KBDHACKS_BASICKEY_H 1
 
 #include <stdint.h>
-#include "BasicKey.h"
-#include "Timer.h"
 
-#define LEADER_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
-#define LEADER_SEQUENCE_LENGTH_MAX 3
-
-class LeaderKey : public BasicKey {
- private:
-  void _reset (void);
-
+class BasicKey {
  protected:
-  enum LookupResult {
-    NOT_FOUND,
-    PARTIAL,
-    MATCH
-  };
-
-  Timer timer;
-
-  uint8_t seq_length;
-  uint8_t sequence[LEADER_SEQUENCE_LENGTH_MAX];
-  bool need_reset;
-
-  virtual LookupResult lookup (void) = 0;
+  uint8_t keycode;
 
  public:
-  LeaderKey (uint8_t keycode);
-  LeaderKey (uint8_t keycode, uint16_t timeout);
+  BasicKey (uint8_t code);
 
-  virtual bool press (uint8_t keycode);
-  virtual bool release (uint8_t keycode);
-  virtual void cycle (void);
-
-  virtual void action (void) = 0;
+  virtual bool press (uint8_t code) = 0;
+  virtual bool release (uint8_t code) = 0;
+  virtual void cycle (void) = 0;
 };
 
 #endif
