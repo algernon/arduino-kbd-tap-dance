@@ -46,22 +46,47 @@ public:
   void onReset () { cnt_onReset++; };
 };
 
-class TapDanceTestDoubleKey : public TapDanceDoubleKey {
-protected:
-  virtual void register_code (uint8_t kc) { last_reg_kc = kc; };
-  virtual void unregister_code (uint8_t kc) { last_unreg_kc = kc; };
-
+class TestKey : public BasicKey {
 public:
-  TapDanceTestDoubleKey (uint8_t code, uint8_t kc1, uint8_t kc2) : TapDanceDoubleKey (code, kc1, kc2) {
+  uint8_t last_press, last_release;
+
+  TestKey (uint8_t index) : BasicKey (index) {
+    last_press = last_release = 0;
+  };
+
+  bool press (uint8_t index) { last_press = index; return false; };
+  bool release (uint8_t index) { last_release = index; return false; };
+  void cycle () {};
+};
+
+class TapDanceTestDoubleKey : public TapDanceDoubleKey {
+public:
+  TapDanceTestDoubleKey (uint8_t index, BasicKey *key1, BasicKey *key2) : TapDanceDoubleKey (index, key1, key2) {
     cnt_onFinish = 0;
     cnt_onReset = 0;
   }
 
-  uint8_t cnt_onFinish, cnt_onReset, last_reg_kc, last_unreg_kc;
+  uint8_t cnt_onFinish, cnt_onReset;
 
   uint8_t get_count (void) { return this->count; };
-  uint8_t get_last_reg (void) { return this->last_reg_kc; };
-  uint8_t get_last_unreg (void) { return this->last_unreg_kc; };
+  uint8_t get_last_reg (void) {
+    TestKey *k1 = (TestKey *)(this->key1),
+      *k2 = (TestKey *)(this->key2);
+
+    if (k1->last_press == 0)
+      return k2->last_press;
+    else
+      return k1->last_press;
+  };
+  uint8_t get_last_unreg (void) {
+    TestKey *k1 = (TestKey *)(this->key1),
+      *k2 = (TestKey *)(this->key2);
+
+    if (k1->last_press == 0)
+      return k2->last_release;
+    else
+      return k1->last_release;
+  };
 
   void onFinish () { cnt_onFinish++; TapDanceDoubleKey::onFinish (); };
   void onReset () { cnt_onReset++; TapDanceDoubleKey::onReset (); };
@@ -303,7 +328,7 @@ TEST_GROUP (TapDanceDouble) {
 };
 
 TEST (TapDanceDouble, one_tap) {
-  TapDanceTestDoubleKey t = TapDanceTestDoubleKey (42, 2, 27);
+  TapDanceTestDoubleKey t = TapDanceTestDoubleKey (42, new TestKey (2), new TestKey (27));
 
   // tap-and-release, followed by a timeout
   t.press (42);
@@ -327,7 +352,7 @@ TEST (TapDanceDouble, one_tap) {
 }
 
 TEST (TapDanceDouble, double_tap) {
-  TapDanceTestDoubleKey t = TapDanceTestDoubleKey (42, 2, 27);
+  TapDanceTestDoubleKey t = TapDanceTestDoubleKey (42, new TestKey (2), new TestKey (27));
 
   // tap-and-release, followed by a timeout
   t.press (42);

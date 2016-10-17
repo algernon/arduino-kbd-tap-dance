@@ -16,44 +16,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _KBDHACKS_LEADER_H
-#define _KBDHACKS_LEADER_H 1
+#pragma once
 
 #include <stdint.h>
 #include "BasicKey.h"
 #include "Timer.h"
 
-#define LEADER_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
-#define LEADER_SEQUENCE_LENGTH_MAX 3
+#define TAP_DANCE_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
 
-class LeaderKey : public BasicKey {
+class TapDanceKey : public BasicKey {
  private:
   void _reset (void);
 
  protected:
-  enum LookupResult {
-    NOT_FOUND,
-    PARTIAL,
-    MATCH
-  };
-
   Timer timer;
+  uint8_t count;
+  bool pressed;
+  bool interrupted;
+  bool timedout;
 
-  uint8_t seq_length;
-  uint8_t sequence[LEADER_SEQUENCE_LENGTH_MAX];
-  bool need_reset;
-
-  virtual LookupResult lookup (void) = 0;
+  virtual void onFinish (void) {};
+  virtual void onReset (void) {};
+  virtual void onEachTap (void) {};
 
  public:
-  LeaderKey (uint8_t keycode);
-  LeaderKey (uint8_t keycode, uint16_t timeout);
+  TapDanceKey (uint8_t index);
+  TapDanceKey (uint8_t index, uint16_t timeout);
 
-  virtual bool press (uint8_t keycode);
-  virtual bool release (uint8_t keycode);
+  virtual bool press (uint8_t index);
+  virtual bool release (uint8_t index);
   virtual void cycle (void);
-
-  virtual void action (void) = 0;
 };
 
-#endif
+class TapDanceDoubleKey : public TapDanceKey {
+ protected:
+  BasicKey *key1, *key2;
+
+  virtual void onFinish (void);
+  virtual void onReset (void);
+
+ public:
+  TapDanceDoubleKey (uint8_t index, BasicKey *key1, BasicKey *key2);
+  ~TapDanceDoubleKey (void);
+};

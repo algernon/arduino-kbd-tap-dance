@@ -18,10 +18,10 @@
 
 #include "OneShot.h"
 
-OneShotKey::OneShotKey (uint8_t code) : OneShotKey (code, ONESHOT_TIMEOUT_DEFAULT) {
+OneShotKey::OneShotKey (uint8_t index) : OneShotKey (index, ONESHOT_TIMEOUT_DEFAULT) {
 }
 
-OneShotKey::OneShotKey (uint8_t code, uint16_t timeout) : BasicKey (code) {
+OneShotKey::OneShotKey (uint8_t index, uint16_t timeout) : BasicKey (index) {
   timer = Timer (timeout);
   _reset ();
 }
@@ -42,16 +42,16 @@ OneShotKey::_reset (void) {
 }
 
 bool
-OneShotKey::press (uint8_t code) {
-  if (code != this->keycode) {
+OneShotKey::press (uint8_t index) {
+  if (index != this->index) {
     if (this->sticky)
       return true;
 
     if (this->active) {
       if (this->pressed)
-        this->cancel = !this->shouldIgnore (code);
+        this->cancel = !this->shouldIgnore (index);
       else
-        this->active = this->shouldIgnore (code);
+        this->active = this->shouldIgnore (index);
     }
 
     return true;
@@ -75,19 +75,19 @@ OneShotKey::press (uint8_t code) {
 }
 
 bool
-OneShotKey::release (uint8_t code) {
+OneShotKey::release (uint8_t index) {
   if (!this->active)
-    return (this->keycode != code);
+    return (this->index != index);
 
-  if (this->keycode == code)
+  if (this->index == index)
     this->pressed = false;
 
-  if (this->cancel && code == this->keycode) {
+  if (this->cancel && index == this->index) {
     this->onDeactivate ();
     _reset();
   }
 
-  return (this->keycode != code);
+  return (this->index != index);
 }
 
 void
@@ -110,12 +110,28 @@ OneShotKey::cycle (void) {
   }
 }
 
+OneShotModifierKey::OneShotModifierKey (uint8_t index, BasicKey *mod, uint16_t timeout)
+  : OneShotKey (index, timeout) {
+  this->mod = mod;
+}
+
+OneShotModifierKey::OneShotModifierKey (uint8_t index, BasicKey *mod)
+  : OneShotKey (index) {
+  this->mod = mod;
+}
+
+OneShotModifierKey::~OneShotModifierKey (void) {
+  delete (this->mod);
+}
+
 void
 OneShotModifierKey::onActivate (void) {
-  this->register_code (this->kc);
+  this->mod->press ();
+  this->mod->cycle ();
 }
 
 void
 OneShotModifierKey::onDeactivate (void) {
-  this->unregister_code (this->kc);
+  this->mod->release ();
+  this->mod->cycle ();
 }

@@ -1,11 +1,11 @@
 CXX ?= g++
-CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11 -Wextra -IKbdBasicKey/src -IKbdTapDance/src
+CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11 -Wextra -IkbagBasicKey/src -IkbagTapDance/src
 
-SOURCES = KbdBasicKey/src/BasicKey.cpp \
-          KbdTapDance/src/Timer.cpp \
-          KbdTapDance/src/TapDance.cpp \
-          KbdTapDance/src/OneShot.cpp \
-          KbdTapDance/src/Leader.cpp
+SOURCES = kbagBasicKey/src/BasicKey.cpp \
+          kbagTapDance/src/Timer.cpp \
+          kbagTapDance/src/TapDance.cpp \
+          kbagTapDance/src/OneShot.cpp \
+          kbagTapDance/src/Leader.cpp
 HEADERS = ${SOURCES:.cpp=.h}
 
 TEST_SOURCES = t/test-timer.cpp t/test-tap-dance.cpp \

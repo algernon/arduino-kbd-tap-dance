@@ -18,10 +18,10 @@
 
 #include "TapDance.h"
 
-TapDanceKey::TapDanceKey (uint8_t code) : TapDanceKey (code, TAP_DANCE_TIMEOUT_DEFAULT) {
+TapDanceKey::TapDanceKey (uint8_t index) : TapDanceKey (index, TAP_DANCE_TIMEOUT_DEFAULT) {
 }
 
-TapDanceKey::TapDanceKey (uint8_t code, uint16_t timeout) : BasicKey (code) {
+TapDanceKey::TapDanceKey (uint8_t index, uint16_t timeout) : BasicKey (index) {
   timer = Timer (timeout);
   _reset ();
 }
@@ -37,8 +37,8 @@ TapDanceKey::_reset (void) {
 }
 
 bool
-TapDanceKey::press (uint8_t code) {
-  if (this->keycode == code) {
+TapDanceKey::press (uint8_t index) {
+  if (this->index == index) {
     this->count++;
     this->pressed = true;
 
@@ -62,8 +62,8 @@ TapDanceKey::press (uint8_t code) {
 }
 
 bool
-TapDanceKey::release (uint8_t code) {
-  if (code != this->keycode)
+TapDanceKey::release (uint8_t index) {
+  if (index != this->index)
     return true;
 
   this->pressed = false;
@@ -91,20 +91,35 @@ TapDanceKey::cycle (void) {
 }
 
 // --- Double ---
+
+TapDanceDoubleKey::TapDanceDoubleKey (uint8_t index, BasicKey *key1, BasicKey *key2) : TapDanceKey (index) {
+  this->key1 = key1;
+  this->key2 = key2;
+}
+
+TapDanceDoubleKey::~TapDanceDoubleKey (void) {
+  delete (this->key1);
+  delete (this->key2);
+}
+
 void
 TapDanceDoubleKey::onFinish () {
-  uint8_t kc = this->kc1;
-  if (this->count >= 2)
-    kc = this->kc2;
-
-  this->register_code (kc);
+  if (this->count == 1) {
+    this->key1->press ();
+    this->key1->cycle ();
+  } else {
+    this->key2->press ();
+    this->key2->cycle ();
+  }
 }
 
 void
 TapDanceDoubleKey::onReset () {
-  uint8_t kc = this->kc1;
-  if (this->count >= 2)
-    kc = this->kc2;
-
-  this->unregister_code (kc);
+  if (this->count == 1) {
+    this->key1->release ();
+    this->key1->cycle ();
+  } else {
+    this->key2->release ();
+    this->key2->cycle ();
+  }
 }

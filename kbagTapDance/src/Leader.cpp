@@ -20,12 +20,12 @@
 
 #include <string.h>
 
-LeaderKey::LeaderKey (uint8_t code, uint16_t timeout) : BasicKey (code) {
+LeaderKey::LeaderKey (uint8_t index, uint16_t timeout) : BasicKey (index) {
   timer = Timer (timeout);
   _reset ();
 }
 
-LeaderKey::LeaderKey (uint8_t code) : LeaderKey (code, LEADER_TIMEOUT_DEFAULT) {
+LeaderKey::LeaderKey (uint8_t index) : LeaderKey (index, LEADER_TIMEOUT_DEFAULT) {
 }
 
 void
@@ -37,11 +37,11 @@ LeaderKey::_reset (void) {
 }
 
 bool
-LeaderKey::press (uint8_t code) {
-  if (seq_length == 0 && code != keycode)
+LeaderKey::press (uint8_t index) {
+  if (seq_length == 0 && index != this->index)
     return true;
 
-  sequence[seq_length] = code;
+  sequence[seq_length] = index;
   seq_length++;
 
   switch (lookup ()) {
@@ -60,13 +60,13 @@ LeaderKey::press (uint8_t code) {
 }
 
 bool
-LeaderKey::release (uint8_t code) {
+LeaderKey::release (uint8_t index) {
   if (need_reset) {
     _reset ();
     return false;
   }
 
-  if (code != keycode)
+  if (index != this->index)
     return seq_length == 0;
 
   return false;

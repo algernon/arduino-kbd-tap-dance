@@ -16,21 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _KBDHACKS_BASICKEY_H
-#define _KBDHACKS_BASICKEY_H 1
+#pragma once
 
 #include <stdint.h>
 
-class BasicKey {
+#define TIMEOUT_DEFAULT 40
+
+class Timer {
  protected:
-  uint8_t keycode;
+  uint16_t _timer;
+  uint16_t _timeout;
 
  public:
-  BasicKey (uint8_t code);
+  Timer (void);
+  Timer (uint16_t timeout);
 
-  virtual bool press (uint8_t code) = 0;
-  virtual bool release (uint8_t code) = 0;
-  virtual void cycle (void) = 0;
+  uint16_t operator++ (int);
+
+  bool operator== (const uint16_t rhs);
+
+  uint16_t operator() () const;
+  void operator() (const uint16_t newTimeout);
+
+  Timer& operator= (uint16_t newTimer);
+
+  bool timedout (void);
 };
-
-#endif

@@ -16,55 +16,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _KBDHACKS_TAPDANCE_H
-#define _KBDHACKS_TAPDANCE_H 1
+#pragma once
 
 #include <stdint.h>
 #include "BasicKey.h"
 #include "Timer.h"
 
-#define TAP_DANCE_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
+#define ONESHOT_TIMEOUT_DEFAULT TIMEOUT_DEFAULT
 
-class TapDanceKey : public BasicKey {
+class OneShotKey : public BasicKey {
  private:
   void _reset (void);
 
  protected:
   Timer timer;
-  uint8_t count;
+  bool active;
+  bool sticky;
   bool pressed;
-  bool interrupted;
-  bool timedout;
+  bool cancel;
 
-  virtual void onFinish (void) {};
-  virtual void onReset (void) {};
-  virtual void onEachTap (void) {};
+  virtual void onActivate (void) {};
+  virtual void onDeactivate (void) {};
+
+  virtual bool shouldIgnore (uint8_t index);
 
  public:
-  TapDanceKey (uint8_t code);
-  TapDanceKey (uint8_t code, uint16_t timeout);
+  OneShotKey (uint8_t index);
+  OneShotKey (uint8_t index, uint16_t timeout);
 
-  virtual bool press (uint8_t code);
-  virtual bool release (uint8_t code);
+  virtual bool press (uint8_t index);
+  virtual bool release (uint8_t index);
   virtual void cycle (void);
 };
 
-class TapDanceDoubleKey : public TapDanceKey {
- private:
-  uint8_t kc1, kc2;
-
+class OneShotModifierKey : public OneShotKey {
  protected:
-  virtual void register_code (uint8_t code) = 0;
-  virtual void unregister_code (uint8_t code) = 0;
+  BasicKey *mod;
 
-  virtual void onFinish (void);
-  virtual void onReset (void);
+  virtual void onActivate (void);
+  virtual void onDeactivate (void);
 
  public:
-  TapDanceDoubleKey (uint8_t code, uint8_t kc1, uint8_t kc2) : TapDanceKey (code) {
-    this->kc1 = kc1;
-    this->kc2 = kc2;
-  };
+  OneShotModifierKey (uint8_t index, BasicKey *mod);
+  OneShotModifierKey (uint8_t index, BasicKey *mod, uint16_t timeout);
+  virtual ~OneShotModifierKey (void);
 };
-
-#endif

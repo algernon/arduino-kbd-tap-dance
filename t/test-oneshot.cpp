@@ -43,18 +43,31 @@ public:
   }
 };
 
-class OneShotModifierTestKey : public OneShotModifierKey {
-protected:
-  virtual void register_code (uint8_t code) { last_kc_reg = code; };
-  virtual void unregister_code (uint8_t code) { last_kc_unreg = code; };
-
+class TestKey : public BasicKey {
 public:
-  OneShotModifierTestKey (uint8_t code, uint8_t kc) : OneShotModifierKey (code, kc) {
+  uint8_t last_press, last_release;
+
+  TestKey (uint8_t index) : BasicKey (index) {
+    last_press = last_release = 0;
+  };
+
+  bool press (uint8_t index) { last_press = index; return false; };
+  bool release (uint8_t index) { last_release = index; return false; };
+  void cycle () {};
+};
+
+
+class OneShotModifierTestKey : public OneShotModifierKey {
+public:
+  OneShotModifierTestKey (uint8_t code, BasicKey *kc) : OneShotModifierKey (code, kc) {
     last_kc_reg = last_kc_unreg = 0;
   };
-  OneShotModifierTestKey (uint8_t code, uint8_t kc, uint16_t timeout) : OneShotModifierKey (code, kc, timeout) {
+  OneShotModifierTestKey (uint8_t code, BasicKey *kc, uint16_t timeout) : OneShotModifierKey (code, kc, timeout) {
     last_kc_reg = last_kc_unreg = 0;
   };
+
+  uint8_t get_last_reg (void) { return ((TestKey *)mod)->last_press; };
+  uint8_t get_last_unreg (void) { return ((TestKey *)mod)->last_release; };
 
   uint8_t last_kc_reg, last_kc_unreg;
 };
@@ -256,10 +269,10 @@ TEST_GROUP (OneShotMod) {
 };
 
 TEST (OneShotMod, modifiers) {
-  OneShotModifierTestKey t = OneShotModifierTestKey (42, 132);
+  OneShotModifierTestKey t = OneShotModifierTestKey (42, new TestKey (132));
 
   t.press (42);
-  CHECK (t.last_kc_reg == 132);
+  CHECK (t.get_last_reg () == 132);
   t.release (42);
   t.cycle ();
 
@@ -267,7 +280,7 @@ TEST (OneShotMod, modifiers) {
   t.release (1);
   t.cycle ();
 
-  CHECK (t.last_kc_unreg == 132);
+  CHECK (t.get_last_unreg () == 132);
 }
 
 TEST (OneShot, caller_signal) {
