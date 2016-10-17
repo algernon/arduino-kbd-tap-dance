@@ -31,8 +31,9 @@ compile: ${OUTPUT_PATH}
 		-tools $(ARDUINO_TOOLS_PATH) \
 		-tools $(ARDUINO_PATH)/tools-builder  \
 		-fqbn $(FQBN) \
-    -libraries ../KbdBasicKey \
-    -libraries ../KbdTapDance \
+    -libraries ../kbagBasicKey \
+    -libraries ../kbagTapDance \
+    -libraries ../kbagLayout \
     ${VERBOSE} \
 		-build-path $(BUILD_PATH) \
 		-ide-version $(ARDUINO_IDE_VERSION) \

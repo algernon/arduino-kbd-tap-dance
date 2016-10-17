@@ -1,15 +1,17 @@
 CXX ?= g++
-CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11 -Wextra -IkbagBasicKey/src -IkbagTapDance/src
+CXXFLAGS = -Wall -O0 -ggdb3 -std=c++11 -Wextra -IkbagBasicKey/src -IkbagTapDance/src -IkbagLayout/src
 
 SOURCES = kbagBasicKey/src/BasicKey.cpp \
           kbagTapDance/src/Timer.cpp \
           kbagTapDance/src/TapDance.cpp \
           kbagTapDance/src/OneShot.cpp \
-          kbagTapDance/src/Leader.cpp
+          kbagTapDance/src/Leader.cpp \
+          kbagLayout/src/kbagLayout.cpp
 HEADERS = ${SOURCES:.cpp=.h}
 
 TEST_SOURCES = t/test-timer.cpp t/test-tap-dance.cpp \
                t/test-oneshot.cpp t/test-leader.cpp \
+               t/test-layout.cpp \
                t/testsuite.cpp
 
 OBJECTS = ${SOURCES:.cpp=.o}
