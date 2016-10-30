@@ -1,14 +1,11 @@
 Arduino Keyboard Hacks
 ======================
 
-[![Build Status](https://travis-ci.org/algernon/arduino-kbd-tap-dance.svg?branch=master)](https://travis-ci.org/algernon/arduino-kbd-tap-dance)
+This used to be a proof of concept library, one that eventually failed to
+deliver. It is no longer developed, please refer to the [Akela][akela] library
+instead, which supersedes this one.
 
-Primarily aimed at the [Keyboard.io Model 01][kbdio], but likely usable by any
-other keyboard built with an Arduino at heart. Let me first say that this has
-not been tested on any real hardware, and as such, is more a proof of concept,
-than anything else.
-
- [kbdio]: https://shop.keyboard.io/
+ [akela]: https://github.com/algernon/Akela
 
 License
 =======
